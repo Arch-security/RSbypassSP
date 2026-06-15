@@ -1,0 +1,7 @@
+Line 46:
+    The entry value
+        L2 boundary norm
+    for the entry named
+        Misfit functional
+    does not match the given pattern
+        L2 norm|L2 boundary norm|L2 weighted boundary norm|L2 weighted boundary norm (real scaling)|L2 weighted boundary norm (complex scaling)|ratio over ratio minus one|ratio minus ratio

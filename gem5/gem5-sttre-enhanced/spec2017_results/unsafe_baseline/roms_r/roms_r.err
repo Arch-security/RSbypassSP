@@ -1,0 +1,21 @@
+At line 3050 of file inp_par.fppized.f90
+Fortran runtime error: Bad real number in item 1 of list input
+
+Error termination. Backtrace:
+
+Could not print backtrace: libbacktrace could not find executable to open
+#0  0x7fff8dc4c99e
+#1  0x7fff8dc4d4d9
+#2  0x7fff8dc4e10f
+#3  0x7fff8de991b6
+#4  0x7fff8de9a5fd
+#5  0x7fff8de9b2aa
+#6  0x1239f1
+#7  0x12473b
+#8  0x12fdd7
+#9  0xe9635
+#10  0x440b
+#11  0x7fff8d845d8f
+#12  0x7fff8d845e3f
+#13  0x4474
+#14  0xffffffffffffffff

@@ -1,0 +1,4 @@
+SPEC CPU XZ driver: input=cld.tar.xz insize=160
+Loading Input Data
+Decompression decoder error: Compressed data is corrupt (code 9)
+Compressed size: 82270464; Uncompressed size: 32768

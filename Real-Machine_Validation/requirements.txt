@@ -1,0 +1,9 @@
+# Python requirements for real-machine plotting and nanoBench helper scripts.
+# Tested with Python 3.10.12 on Ubuntu 22.04.5.
+
+numpy==1.26.4
+matplotlib==3.8.4
+seaborn==0.13.2
+scipy==1.13.1
+plotly==5.24.1
+requests==2.32.3

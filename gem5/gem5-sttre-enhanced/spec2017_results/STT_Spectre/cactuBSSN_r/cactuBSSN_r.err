@@ -1,0 +1,3 @@
+WARNING level 0 in thorn Cactus processor 0 host SPEC
+  (line 2431 of Cactus/main/Groups.c): 
+  -> CCTKi_CreateGroup: Failed to create TAGS table for group 'LAPSE' from thorn 'ADMBASE'

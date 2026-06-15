@@ -1,0 +1,2 @@
+cpugcc_r_base.x86-m64: error: unrecognized command line option "-fif-conversion"
+cpugcc_r_base.x86-m64: error: /usr/include: not a directory

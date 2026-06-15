@@ -1,0 +1,94 @@
+(seq_io_init) pio init parameters: before nml read
+(seq_io_init)    pio_stride   =    -99
+(seq_io_init)    pio_root     =    -99
+(seq_io_init)    pio_typename = nothing                                                                         
+(seq_io_init)    pio_numtasks =    -99
+(seq_io_init)    pio_debug_level =      0
+    pio_async_interface =  F
+(seq_io_init) pio init parameters: after nml read
+(seq_io_init)    pio_stride   =    -99
+(seq_io_init)    pio_root     =    -99
+(seq_io_init)    pio_typename = nothing                                                                         
+(seq_io_init)    pio_numtasks =    -99
+(seq_io_init) pio init parameters: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+(seq_io_init)    pio_typename = NOTHING                                                                         
+(seq_io_init)    pio_numtasks =      1
+(seq_io_init)    pio_debug_level =      0
+    pio_async_interface =  F
+(seq_comm_setcomm)  initialize ID (  7 GLOBAL ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  1)
+(seq_comm_setcomm)  initialize ID (  2   ATM  ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  8)
+(seq_comm_setcomm)  initialize ID (  1   LND  ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  8)
+(seq_comm_setcomm)  initialize ID (  4   ICE  ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  8)
+(seq_comm_setcomm)  initialize ID (  5   GLC  ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  1)
+(seq_comm_setcomm)  initialize ID (  3   OCN  ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  8)
+(seq_comm_setcomm)  initialize ID (  6   CPL  ) pelist   =     0     0     1 ( npes =     1) ( nthreads =  8)
+(seq_comm_joincomm) initialize ID (  8 CPLATM ) join IDs =     6     2       ( npes =     1) ( nthreads =  8)
+(seq_comm_joincomm) initialize ID (  9 CPLLND ) join IDs =     6     1       ( npes =     1) ( nthreads =  8)
+(seq_comm_joincomm) initialize ID ( 10 CPLICE ) join IDs =     6     4       ( npes =     1) ( nthreads =  8)
+(seq_comm_joincomm) initialize ID ( 11 CPLOCN ) join IDs =     6     3       ( npes =     1) ( nthreads =  8)
+(seq_comm_joincomm) initialize ID ( 12 CPLGLC ) join IDs =     6     5       ( npes =     1) ( nthreads =  8)
+  
+ (seq_comm_printcomms) ID layout : global pes vs local pe for each ID
+     gpe        LND      ATM      OCN      ICE      GLC      CPL    GLOBAL   CPLATM   CPLLND   CPLICE   CPLOCN   CPLGLC    nthrds
+     ---      ------   ------   ------   ------   ------   ------   ------   ------   ------   ------   ------   ------    ------
+       0   :       0        0        0        0        0              0        0        0        0        0           0        8
+  
+(seq_io_init) pio init parameters for CPL: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+    pio iotype is netcdf
+(seq_io_init)    pio_iotype =      6
+(seq_io_init)    pio_numtasks =      1
+(seq_io_init) pio init parameters for ATM: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+    pio iotype is netcdf
+(seq_io_init)    pio_iotype =      6
+(seq_io_init)    pio_numtasks =      1
+(seq_io_init) pio init parameters for ICE: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+    pio iotype is netcdf
+(seq_io_init)    pio_iotype =      6
+(seq_io_init)    pio_numtasks =      1
+(seq_io_init) pio init parameters for OCN: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+    pio iotype is netcdf
+(seq_io_init)    pio_iotype =      6
+(seq_io_init)    pio_numtasks =      1
+(seq_io_init) pio init parameters for LND: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+    pio iotype is netcdf
+(seq_io_init)    pio_iotype =      6
+(seq_io_init)    pio_numtasks =      1
+(seq_io_init) pio init parameters for GLC: 
+(seq_io_init)    pio_stride   =      4
+(seq_io_init)    pio_root     =      0
+    pio iotype is netcdf
+(seq_io_init)    pio_iotype =      6
+(seq_io_init)    pio_numtasks =      1
+(seq_mct_drv) USE_ESMF_LIB is NOT set, using esmf_wrf_timemgr
+(seq_mct_drv) : ------------------------------------------------------------
+(seq_mct_drv) :      NCAR CPL7 Community Climate System Model (CCSM)  
+(seq_mct_drv) : ------------------------------------------------------------
+(seq_mct_drv) :      (Online documentation is available on the CCSM         
+(seq_mct_drv) :       Models page: http://www.ccsm.ucar.edu/models/         
+(seq_mct_drv) :       License information is available as a link from above 
+(seq_mct_drv) : ------------------------------------------------------------
+(seq_mct_drv) :                 DATE 09/09/01 TIME 09:46:40
+(seq_mct_drv) : ------------------------------------------------------------
+  
+  
+ (t_initf) Read in prof_inparm namelist from: drv_in
+8 MB memory   alloc in MB is             8.00
+8 MB memory dealloc in MB is             7.99
+Memory block size conversion in bytes is          4090.01
+(seq_mct_drv) : Read in drydep_inparm namelist from: drv_flds_in
+ seq_drydep_read: drydep_method: xactive_lnd
+(seq_mct_drv) : No dry deposition fields will be transfered
+(shr_sys_abort) ERROR: index_a2x_Faxa_rainl is zero
+(shr_sys_abort) WARNING: calling shr_mpi_abort() and stopping

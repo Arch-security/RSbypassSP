@@ -1,0 +1,376 @@
+Running tests... Log saved to run_all_output.log
+=== RCX = 0 ===
+cc -std=gnu -O1 -march=native -DRCX=0  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 0
+got time 46 
+got time 48 
+got time 48 
+got time 48 
+got time 460 
+got time 48 
+got time 96 
+got time 46 
+got time 66 
+got time 48 
+got time 96 
+got time 48 
+got time 48 
+got time 46 
+got time 50 
+got time 48 
+got time 46 
+got time 48 
+got time 54 
+got time 48 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 128 ===
+cc -std=gnu -O1 -march=native -DRCX=128  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 128
+got time 48 
+got time 48 
+got time 526 
+got time 52 
+got time 166 
+got time 48 
+got time 48 
+got time 50 
+got time 34 
+got time 48 
+got time 50 
+got time 48 
+got time 50 
+got time 48 
+got time 50 
+got time 582 
+got time 48 
+got time 120 
+got time 46 
+got time 48 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 256 ===
+cc -std=gnu -O1 -march=native -DRCX=256  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 256
+got time 116 
+got time 128 
+got time 48 
+got time 564 
+got time 60 
+got time 142 
+got time 48 
+got time 94 
+got time 48 
+got time 526 
+got time 46 
+got time 566 
+got time 144 
+got time 138 
+got time 132 
+got time 134 
+got time 226 
+got time 48 
+got time 48 
+got time 150 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 320 ===
+cc -std=gnu -O1 -march=native -DRCX=320  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 320
+got time 50 
+got time 50 
+got time 48 
+got time 600 
+got time 46 
+got time 144 
+got time 54 
+got time 48 
+got time 48 
+got time 48 
+got time 56 
+got time 56 
+got time 46 
+got time 36 
+got time 318 
+got time 50 
+got time 48 
+got time 100 
+got time 172 
+got time 48 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 512 ===
+cc -std=gnu -O1 -march=native -DRCX=512  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 512
+got time 48 
+got time 582 
+got time 114 
+got time 54 
+got time 48 
+got time 48 
+got time 94 
+got time 602 
+got time 46 
+got time 46 
+got time 48 
+got time 582 
+got time 582 
+got time 50 
+got time 380 
+got time 590 
+got time 596 
+got time 48 
+got time 114 
+got time 46 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 832 ===
+cc -std=gnu -O1 -march=native -DRCX=832  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 832
+got time 108 
+got time 48 
+got time 74 
+got time 50 
+got time 76 
+got time 110 
+got time 68 
+got time 148 
+got time 68 
+got time 80 
+got time 68 
+got time 130 
+got time 48 
+got time 62 
+got time 130 
+got time 132 
+got time 66 
+got time 48 
+got time 70 
+got time 58 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 1536 ===
+cc -std=gnu -O1 -march=native -DRCX=1536  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 1536
+got time 54 
+got time 584 
+got time 48 
+got time 58 
+got time 628 
+got time 34 
+got time 48 
+got time 34 
+got time 46 
+got time 50 
+got time 34 
+got time 34 
+got time 600 
+got time 104 
+got time 106 
+got time 114 
+got time 114 
+got time 46 
+got time 102 
+got time 48 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2048 ===
+cc -std=gnu -O1 -march=native -DRCX=2048  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2048
+got time 48 
+got time 48 
+got time 46 
+got time 48 
+got time 48 
+got time 48 
+got time 202 
+got time 50 
+got time 602 
+got time 656 
+got time 66 
+got time 46 
+got time 50 
+got time 48 
+got time 50 
+got time 116 
+got time 48 
+got time 46 
+got time 50 
+got time 48 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2176 ===
+cc -std=gnu -O1 -march=native -DRCX=2176  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2176
+got time 48 
+got time 48 
+got time 48 
+got time 98 
+got time 48 
+got time 48 
+got time 464 
+got time 98 
+got time 48 
+got time 710 
+got time 48 
+got time 46 
+got time 46 
+got time 50 
+got time 48 
+got time 616 
+got time 46 
+got time 48 
+got time 48 
+got time 588 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2304 ===
+cc -std=gnu -O1 -march=native -DRCX=2304  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2304
+got time 54 
+got time 48 
+got time 68 
+got time 46 
+got time 48 
+got time 54 
+got time 46 
+got time 50 
+got time 52 
+got time 50 
+got time 54 
+got time 120 
+got time 48 
+got time 52 
+got time 48 
+got time 52 
+got time 114 
+got time 120 
+got time 46 
+got time 60 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2432 ===
+cc -std=gnu -O1 -march=native -DRCX=2432  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2432
+got time 834 
+got time 240 
+got time 244 
+got time 240 
+got time 604 
+got time 246 
+got time 496 
+got time 610 
+got time 366 
+got time 246 
+got time 270 
+got time 240 
+got time 236 
+got time 624 
+got time 238 
+got time 242 
+got time 242 
+got time 240 
+got time 258 
+got time 498 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2560 ===
+cc -std=gnu -O1 -march=native -DRCX=2560  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2560
+got time 392 
+got time 844 
+got time 238 
+got time 240 
+got time 238 
+got time 48 
+got time 272 
+got time 280 
+got time 244 
+got time 240 
+got time 240 
+got time 268 
+got time 246 
+got time 48 
+got time 238 
+got time 242 
+got time 236 
+got time 260 
+got time 672 
+got time 236 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2688 ===
+cc -std=gnu -O1 -march=native -DRCX=2688  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2688
+got time 238 
+got time 234 
+got time 140 
+got time 240 
+got time 628 
+got time 240 
+got time 240 
+got time 642 
+got time 312 
+got time 246 
+got time 64 
+got time 240 
+got time 252 
+got time 32 
+got time 246 
+got time 240 
+got time 250 
+got time 238 
+got time 250 
+got time 246 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 2880 ===
+cc -std=gnu -O1 -march=native -DRCX=2880  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 2880
+got time 328 
+got time 748 
+got time 242 
+got time 506 
+got time 858 
+got time 240 
+got time 246 
+got time 240 
+got time 598 
+got time 250 
+got time 240 
+got time 242 
+got time 240 
+got time 240 
+got time 248 
+got time 240 
+got time 248 
+got time 250 
+got time 246 
+got time 266 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a
+=== RCX = 3008 ===
+cc -std=gnu -O1 -march=native -DRCX=3008  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
+Running with RCX = 3008
+got time 248 
+got time 240 
+got time 242 
+got time 238 
+got time 238 
+got time 48 
+got time 250 
+got time 550 
+got time 268 
+got time 244 
+got time 242 
+got time 328 
+got time 658 
+got time 238 
+got time 238 
+got time 240 
+got time 238 
+got time 246 
+got time 246 
+got time 240 
+=======================
+rm -f measuret_stosb dummy.o libdummy.a

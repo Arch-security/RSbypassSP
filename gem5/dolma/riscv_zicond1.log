@@ -1,0 +1,22 @@
+./build/RISCV/gem5.opt configs/example/se.py --num-cpus=1 --caches --l2cache --cacheline=64 --num-l2cache=1 --l1i_size=64kB --l1i_assoc=4 --l1d_size=16kB --l1d_assoc=4 --l2_size=256kB --l2_assoc=4 --mem-size=8192MB --cpu-type=DerivO3CPU --mode=2  --cmd=/workspace/dolma/RS_Contention_Taxonomy-recognized/predicated/predication_RISCV/bin/gadget_CMOVE.riscv
+gem5 Simulator System.  http://gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 compiled Apr 17 2026 14:42:10
+gem5 started May 15 2026 08:22:27
+gem5 executing on 7eb218b4439e, pid 230255
+command line: ./build/RISCV/gem5.opt configs/example/se.py --num-cpus=1 --caches --l2cache --cacheline=64 --num-l2cache=1 --l1i_size=64kB --l1i_assoc=4 --l1d_size=16kB --l1d_assoc=4 --l2_size=256kB --l2_assoc=4 --mem-size=8192MB --cpu-type=DerivO3CPU --mode=2 --cmd=/workspace/dolma/RS_Contention_Taxonomy-recognized/predicated/predication_RISCV/bin/gadget_CMOVE.riscv
+
+Global frequency set at 1000000000000 ticks per second
+Using following config...
+	DOLMA-Conservative (M+R)
+**** REAL SIMULATION ****
+0,156
+1,199
+0,159
+1,208
+0,170
+1,209
+1,209
+1,209
+Exiting @ tick 20894597000 because exiting with last active thread context

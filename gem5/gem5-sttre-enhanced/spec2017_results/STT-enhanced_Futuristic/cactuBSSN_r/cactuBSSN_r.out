@@ -1,0 +1,47 @@
+--------------------------------------------------------------------------------
+
+       10                                
+  1   0101       **************************  
+  01  1010 10      The Cactus Code V4.2.1    
+ 1010 111      www.cactuscode.org     
+  1001 100101    ************************  
+    00010101                               
+     100011     (c) Copyright The Authors  
+      0100      GNU Licensed. No Warranty  
+      0101                                      
+--------------------------------------------------------------------------------
+
+Cactus version:    4.2.1
+Parameter file:    spec_ref.par
+--------------------------------------------------------------------------------
+
+Activating thorn Cactus...Success -> active implementation Cactus
+Activation requested for 
+--->PUGPUGHReduce PUGHSlab Boundary CartGrid3D CoordBase LocalReduce SymBase ADMBase ADMCoupling ADMMacros CoordGauge StaticConformal Time MoL ML_BSSN ML_BSSN_Helper GaugeWave IOBasic IOASCII IOUt IOASCII IOUtil <---
+Thorn GaugeWave requests automatic activation of GenericFD
+Activating thorn ADMBase...Success -> active implementation ADMBase
+Activating thorn ADMCoupling...Success -> active implementation ADMCoupling
+Activating thorn ADMMacros...Success -> active implementation ADMMacros
+Activating thorn Boundary...Success -> active implementation boundary
+Activating thorn CartGrid3D...Success -> active implementation grid
+Activating thorn CoordBase...Success -> active implementation CoordBase
+Activating thorn CoordGauge...Success -> active implementation CoordGauge
+Activating thorn GaugeWave...Success -> active implementation GaugeWave
+Activating thorn GenericFD...Success -> active implementation GenericFD
+Activating thorn IOASCII...Success -> active implementation IOASCII
+Activating thorn IOBasic...Success -> active implementation IOBasic
+Activating thorn IOUtil...Success -> active implementation IO
+Activating thorn LocalReduce...Success -> active implementation LocalReduce
+Activating thorn ML_BSSN...Success -> active implementation ML_BSSN
+Activating thorn ML_BSSN_Helper...Success -> active implementation ML_BSSN_Helper
+Activating thorn MoL...Success -> active implementation MethodOfLines
+Activating thorn PUGH...Success -> active implementation Driver
+Activating thorn PUGHInterp...Success -> active implementation Interp
+Activating thorn PUGHReduce...Success -> active implementation Reduce
+Activating thorn PUGHSlab...Success -> active implementation Hyperslab
+Activating thorn StaticConformal...Success -> active implementation StaticConformal
+Activating thorn SymBase...Success -> active implementation SymBase
+Activating thorn Time...Success -> active implementation time
+WARNING level 0 in thorn Cactus processor 0 host SPEC
+  (line 2431 of Cactus/main/Groups.c): 
+  -> CCTKi_CreateGroup: Failed to create TAGS table for group 'LAPSE' from thorn 'ADMBASE'

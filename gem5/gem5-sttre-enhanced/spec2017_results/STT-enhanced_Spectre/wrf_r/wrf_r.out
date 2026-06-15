@@ -1,0 +1,15 @@
+--- WARNING: traj_opt is zero, but num_traj is not zero; setting num_traj to zero.
+--- NOTE: sst_update is 0, setting io_form_auxinput4 = 0 and auxinput4_interval = 0 for all domains
+--- NOTE: grid_fdda is 0 for domain      1, setting gfdda interval and ending time to 0 for that domain.
+--- NOTE: both grid_sfdda and pxlsm_soil_nudge are 0 for domain      1, setting sgfdda interval and ending time to 0 for that domain.
+--- NOTE: obs_nudge_opt is 0 for domain      1, setting obs nudging interval and ending time to 0 for that domain.
+bl_pbl_physics /= 4, implies mfshconv must be 0, resetting
+--- NOTE: num_soil_layers has been set to      4
+WRF V3.6.1 MODEL
+ *************************************
+ Parent domain
+ ids,ide,jds,jde            1          74           1          61
+ ims,ime,jms,jme           -4          79          -4          66
+ ips,ipe,jps,jpe            1          74           1          61
+ *************************************
+DYNAMICS OPTION: Eulerian Mass Coordinate

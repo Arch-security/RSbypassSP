@@ -1,0 +1,9 @@
+================================================================================
+Instructions on LRU covert channel demo code
+
+Wenjie Xiong (wenjie.xiong@yale.edu) and Jakub Szefer (jakub.szefer@yale.edu)
+March 07, 2019
+================================================================================
+
+$ make
+$ sudo cp liblruattack.so* /usr/lib/x86_64-linux-gnu/

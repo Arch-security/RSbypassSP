@@ -1,0 +1,13 @@
+Use of my $_ is experimental at lib/Config.pm line 252.
+syntax error at lib/Config.pm line 244, near ") {"
+syntax error at lib/Config.pm line 245, near ") {"
+Global symbol "$uires explicit package name (did you forget to declare "myre "my $c"?) at lib/Config.pm line 246.
+syntax error at lib/Config.pm line 249, near "}"
+Compilation failed in require at lib/Mail/SpamAssassin/Util.pm line 30.
+BEGIN failed--compilation aborted at lib/Mail/SpamAssassin/Util.pm line 30.
+Compilation failed in require at lib/Mail/SpamAssassin/Conf.pm line 85.
+BEGIN failed--compilation aborted at lib/Mail/SpamAssassin/Conf.pm line 85.
+Compilation failed in require at lib/Mail/SpamAssassin.pm line 60.
+BEGIN failed--compilation aborted at lib/Mail/SpamAssassin.pm line 60.
+Compilation failed in require at checkspam.pl line 16.
+BEGIN failed--compilation aborted at checkspam.pl line 16.

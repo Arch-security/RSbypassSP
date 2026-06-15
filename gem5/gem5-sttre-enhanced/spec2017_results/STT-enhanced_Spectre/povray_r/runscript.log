@@ -1,0 +1,37 @@
+Command line:
+/home/chengxiaoyu/silentbranch/gem5-sttre-preiq/run_spec17suit.sh povray_r
+================= Hardcoded directories ==================
+GEM5_DIR:                                     /home/chengxiaoyu/silentbranch/gem5-sttre-preiq
+SPEC_DIR:                                     /home/chengxiaoyu/spec20171.1.9
+==================== Script inputs =======================
+BENCHMARK:                                    povray_r
+OUTPUT_DIR:                                   /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_results/20260522_174049/spectre_silentbranch_longloop/povray_r
+WORK_DIR:                                     /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_work/20260522_174049/spectre_silentbranch_longloop/povray_r
+SCHEME_NAME:                                  spectre_silentbranch_longloop
+==========================================================
+Original SPEC benchmark runtime directory: /home/chengxiaoyu/spec20171.1.9/benchspec/CPU/511.povray_r/run/run_base_refrate_x86-m64.0000
+Changing to isolated benchmark runtime directory: /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_work/20260522_174049/spectre_silentbranch_longloop/povray_r
+
+
+--------- Starting gem5! ------------
+
+
+Global frequency set at 1000000000000 ticks per second
+Info: simulation uses threatModel: Spectre-SilentBranch; needsTSO=0
+applySTT = 1, implicit_channel = 1, ifPrintROB = 0, moreTransmitInsts = 2, isLongLoopMacroop = 1
+gem5 Simulator System.  http://gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 version 21.2.1.1
+gem5 compiled May 22 2026 17:15:25
+gem5 started May 23 2026 00:41:00
+gem5 executing on unislab-PowerEdge-T640, pid 1657990
+command line: /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/build/X86/gem5.opt --outdir=/home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_results/20260522_174049/spectre_silentbranch_longloop/povray_r/m5out /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/configs/spec2017/se_spec2017.py --num-cpus=1 --bp-type=BiModeBP --caches --l2cache --num-l2cache=1 --l1i_size=32kB --l1i_assoc=8 --l1d_size=32kB --l1d_assoc=8 --l2_size=256kB --l2_assoc=16 --mem-size=8192MB --cpu-type=DerivO3CPU --maxinsts=100000000 --threat_model=Spectre-SilentBranch --needsTSO=0 --STT=1 --implicit_channel=1 --moreTransmitInsts=2 --isLongLoopMacroop=1 --benchmark=povray_r --benchmark_stdout=/home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_results/20260522_174049/spectre_silentbranch_longloop/povray_r/povray_r.out --benchmark_stderr=/home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_results/20260522_174049/spectre_silentbranch_longloop/povray_r/povray_r.err
+
+Selected SPEC_CPU2017 benchmark
+--> povray_r
+Process stdout file: /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_results/20260522_174049/spectre_silentbranch_longloop/povray_r/povray_r.out
+Process stderr file: /home/chengxiaoyu/silentbranch/gem5-sttre-preiq/spec2017_results/20260522_174049/spectre_silentbranch_longloop/povray_r/povray_r.err
+['povray_r_base.x86-m64', 'SPEC-benchmark-ref.ini']
+**** REAL SIMULATION ****
+Exiting @ tick 43110777500 because a thread reached the max instruction count

@@ -1,0 +1,25 @@
+/workspace/stt/build/X86/gem5.opt configs/example/se.py --num-cpus=1 --caches --l2cache --num-l2caches=1 --l1i_size=32kB --l1i_assoc=8 --l1d_size=32kB --l1d_assoc=8 --l2_size=256kB --l2_assoc=4 --mem-size=8192MB --cpu-type=DerivO3CPU --threat_model=Futuristic --needsTSO=0 --STT=1 --implicit_channel=1 --ifPrintROB=0 --moreTransmitInsts=2  --cmd=/workspace/stt/RS_Contention_Taxonomy-overlooked/v1REP_evaluation
+gem5 Simulator System.  http://gem5.org
+gem5 is copyrighted software; use the --copyright option for details.
+
+gem5 compiled Apr 18 2026 04:37:47
+gem5 started May 15 2026 10:58:21
+gem5 executing on c5151d34c98f, pid 12
+command line: /workspace/stt/build/X86/gem5.opt configs/example/se.py --num-cpus=1 --caches --l2cache --num-l2caches=1 --l1i_size=32kB --l1i_assoc=8 --l1d_size=32kB --l1d_assoc=8 --l2_size=256kB --l2_assoc=4 --mem-size=8192MB --cpu-type=DerivO3CPU --threat_model=Futuristic --needsTSO=0 --STT=1 --implicit_channel=1 --ifPrintROB=0 --moreTransmitInsts=2 --cmd=/workspace/stt/RS_Contention_Taxonomy-overlooked/v1REP_evaluation
+
+**********
+info: Configure for DerivO3CPU. needsTSO=0; threat_model=Futuristic; STT=1; implicit_channel=1; moreTransmitInsts=2, printROB=0
+**********
+Global frequency set at 1000000000000 ticks per second
+Info: simulation uses threatModel: Futuristic; needsTSO=0
+applySTT = 1, implicit_channel = 1, ifPrintROB = 0, moreTransmitInsts = 2
+**** REAL SIMULATION ****
+0,56 
+1,197 
+0,46 
+1,165 
+0,11 
+1,166 
+0,12 
+0,11 
+Exiting @ tick 2607379000 because exiting with last active thread context

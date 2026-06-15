@@ -1,0 +1,7 @@
+# Python requirements for gadget_detect plotting and analysis helpers.
+# Tested with Python 3.10.12 on Ubuntu 22.04.
+
+numpy==1.26.4
+matplotlib==3.8.4
+seaborn==0.13.2
+scipy==1.13.1
