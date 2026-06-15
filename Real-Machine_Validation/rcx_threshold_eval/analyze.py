@@ -1,8 +1,17 @@
+import argparse
 import re
 from collections import defaultdict
 
-# 读取 log 文件
-with open("run_all_output.log", "r") as f:
+parser = argparse.ArgumentParser(description="Analyze RCX sweep timing logs.")
+parser.add_argument(
+    "log",
+    nargs="?",
+    default="run_all_output.log",
+    help="RCX sweep log to analyze.",
+)
+args = parser.parse_args()
+
+with open(args.log, "r") as f:
     lines = f.readlines()
 
 data = defaultdict(list)

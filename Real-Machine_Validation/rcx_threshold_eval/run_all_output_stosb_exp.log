@@ -1,4 +1,4 @@
-Running tests... Log saved to run_all_output.log
+Running stosb tests from measuret_stosb.c. Log saved to run_all_output_stosb.log
 === RCX = 0 ===
 cc -std=gnu -O1 -march=native -DRCX=0  measuret_stosb.c -o measuret_stosb -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
 Running with RCX = 0

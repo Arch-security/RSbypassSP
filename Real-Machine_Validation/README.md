@@ -243,13 +243,37 @@ cd Real-Machine_Validation/rcx_threshold_eval
 Run the MOVSB threshold sweep:
 
 ```bash
-bash run_measuret.sh
+bash run_measuret.sh movsb
 ```
 
 This overwrites:
 
 ```text
-run_all_output.log
+run_all_output_movsb.log
+```
+
+The MOVSB sweep uses:
+
+```text
+0 128 256 320 512 832 1536 2048 2560 2688 2752 2880 3008 3510 4022
+```
+
+Run the STOSB threshold sweep:
+
+```bash
+bash run_measuret.sh stosb
+```
+
+This overwrites:
+
+```text
+run_all_output_stosb.log
+```
+
+The STOSB sweep uses:
+
+```text
+0 128 256 320 512 832 1536 2048 2176 2304 2432 2560 2688 2880 3008
 ```
 
 Each `RCX` block contains timing samples in the following format:
@@ -262,10 +286,16 @@ got time 242
 ...
 ```
 
-Analyze the sweep:
+Analyze the MOVSB sweep:
 
 ```bash
-python3 analyze.py
+python3 analyze.py run_all_output_movsb.log
+```
+
+Analyze the STOSB sweep:
+
+```bash
+python3 analyze.py run_all_output_stosb.log
 ```
 
 By default, `analyze.py` evaluates the following candidate timing thresholds:
@@ -285,7 +315,7 @@ The goal is to choose:
 For the checked-in Intel MOVSB log:
 
 ```text
-run_all_output_new_movsb.log
+run_all_output_movsb.log
 ```
 
 a `180`-cycle threshold shows that large `RCX` values such as `3008`, `3510`, and `4022` produce a high percentage of samples above the threshold.
@@ -319,7 +349,7 @@ Using time threshold = 180
 For the checked-in Intel STOSB log:
 
 ```text
-run_all_output_stosbfinal.log
+run_all_output_stosb.log
 ```
 
 a `180`-cycle threshold shows that large `RCX` values such as `2432`, `2560`, `2688`, `2880`, and `3008` produce high percentages of samples above the threshold.
@@ -357,24 +387,17 @@ These results support the paper's Section 5 observation that REP-prefixed string
 Intel validation logs:
 
 ```text
-rcx_threshold_eval/run_all_output_new_movsb.log
-rcx_threshold_eval/run_all_output_stosbfinal.log
+rcx_threshold_eval/run_all_output_movsb_exp.log
+rcx_threshold_eval/run_all_output_stosb_exp.log
 ```
 
-`analyze.py` is hardcoded to read:
-
-```text
-run_all_output.log
-```
-
-To analyze one of the existing logs, either rename or symlink the selected log to `run_all_output.log`, or edit the filename inside `analyze.py`.
+`analyze.py` accepts the log filename as an optional positional argument.
 
 Example:
 
 ```bash
 cd Real-Machine_Validation/rcx_threshold_eval
-cp run_all_output_new_movsb.log run_all_output.log
-python3 analyze.py
+python3 analyze.py run_all_output_movsb.log
 ```
 
 ## 11. Regenerate the RCX-Axis Timing Plot
@@ -385,8 +408,8 @@ To regenerate the timing-versus-`RCX` plot from existing logs:
 cd Real-Machine_Validation/rcx_threshold_eval
 
 python3 draw.py \
-  --log run_all_output_new_movsb.log \
-  --second-log run_all_output_stosbfinal.log \
+  --log run_all_output_movsb.log \
+  --second-log run_all_output_stosb.log \
   --out clean_rcx_trend_movsb_stosb.pdf
 ```
 
@@ -402,9 +425,9 @@ To regenerate the paper-style issued-μop plot:
 cd Real-Machine_Validation/rcx_threshold_eval
 
 python3 draw_uops_issued.py \
-  --log run_all_output_new_movsb.log \
+  --log run_all_output_movsb.log \
   --csv nanoBench_rcx_sweep_results_repmovsb_all.csv \
-  --second-log run_all_output_stosbfinal.log \
+  --second-log run_all_output_stosb.log \
   --second-csv nanoBench_rcx_sweep_results_repstosb_all.csv \
   --out clean_uops_issued_movsb_stosb.pdf
 ```
@@ -440,7 +463,7 @@ The current checked-in attack parameters are:
 
 ```text
 Program              Bit-0 RCX   Bit-1 RCX       Threshold
-v1REP_movsb.c        4           0xBB8 / 3000    200 cycles
+v1REP_movsb.c        4           3008            200 cycles
 v1REP_stosb.c        4           2432            180 cycles
 v1REP_evaluation.c   0           3008            180 cycles
 ```
@@ -702,7 +725,7 @@ The expected qualitative result is that `REP MOVSB` and `REP STOSB` show operand
 - The checked-in logs are useful for verifying the plotting scripts without rerunning noisy measurements.
 - nanoBench requires root privileges and should not be run on a production system.
 - Thresholds in the source files are compile-time/source constants. Rebuild after editing them.
-- `run_measuret.sh` overwrites `run_all_output.log`.
+- `run_measuret.sh movsb` overwrites `run_all_output_movsb.log`; `run_measuret.sh stosb` overwrites `run_all_output_stosb.log`.
 
 ## 19. Troubleshooting
 

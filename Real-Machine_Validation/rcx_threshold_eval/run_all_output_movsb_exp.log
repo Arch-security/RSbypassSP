@@ -1,4 +1,4 @@
-Running tests... Log saved to run_all_output.log
+Running movsb tests from measuret.c. Log saved to run_all_output_movsb.log
 === RCX = 0 ===
 cc -std=gnu -O1 -march=native -DRCX=0  measuret.c -o measuret -L/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval -ldummy -Wl,-rpath=/home/zhouzhe/Arch-workspace/xiaoyu-artifacts/attack/src/attackPoC/rcx_threshold_eval
 Running with RCX = 0

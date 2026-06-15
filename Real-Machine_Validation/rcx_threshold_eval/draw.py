@@ -122,13 +122,13 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Plot RCX timing trends.")
-    parser.add_argument("--log", default="run_all_output_zen3_movsb.log", help="Primary RCX timing log.")
-    parser.add_argument("--out", default="clean_rcx_trend_zen3_movsb_stosb.pdf", help="Output PDF path.")
-    parser.add_argument("--second-log", default="run_all_output_zen3_stosb.log", help="Optional second RCX timing log for stacked plotting.")
+    parser.add_argument("--log", default="run_all_output_movsb.log", help="Primary RCX timing log.")
+    parser.add_argument("--out", default="clean_rcx_trend_movsb_stosb.pdf", help="Output PDF path.")
+    parser.add_argument("--second-log", default="run_all_output_stosb.log", help="Optional second RCX timing log for stacked plotting.")
     parser.add_argument("--first-title", default="MOVSB", help="Title for the first panel.")
     parser.add_argument("--second-title", default="STOSB", help="Title for the second panel.")
     parser.add_argument("--include-ticks", default="", help="Comma-separated primary x ticks to force include.")
-    parser.add_argument("--second-include-ticks", default="22", help="Comma-separated secondary x ticks to force include.")
+    parser.add_argument("--second-include-ticks", default="", help="Comma-separated secondary x ticks to force include.")
     args = parser.parse_args()
 
     data = parse_log(args.log)

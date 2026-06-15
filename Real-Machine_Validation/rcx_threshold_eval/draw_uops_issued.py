@@ -235,7 +235,7 @@ def main():
     base_dir = Path(__file__).resolve().parent
     parser.add_argument(
         "--log",
-        default=str(base_dir / "run_all_output_new_movsb.log"),
+        default=str(base_dir / "run_all_output_movsb.log"),
         help="Path to the RCX timing log.",
     )
     parser.add_argument(
@@ -255,7 +255,7 @@ def main():
     )
     parser.add_argument(
         "--second-log",
-        default=str(base_dir / "run_all_output_stosbfinal.log"),
+        default=str(base_dir / "run_all_output_stosb.log"),
         help="Optional second RCX timing log for a stacked two-panel figure.",
     )
     parser.add_argument(
