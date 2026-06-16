@@ -107,7 +107,7 @@ void victimFunc(uint64_t idx) {
       cmp %%r11d, %%eax
       jbe done
       movl     (%2),%%ebx
-      mov     $3008,%%rdx 
+      mov     $4022,%%rdx 
       mov     $0,%%rcx   
       mov     $0,%%r10d
       cmp     %%ebx,%%r10d
