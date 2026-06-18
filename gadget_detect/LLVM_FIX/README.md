@@ -216,7 +216,7 @@ make > "$AE_OUT/wolfssl_O2.log" 2>&1
 
 ## Collect Results
 
-After all builds finish, generate the Table 3 data:
+After all builds finish, generate the Table 4 data:
 
 ```bash
 bash "$ARTIFACT_ROOT/gadget_detect/LLVM_FIX/scripts/collect_gadget_table.sh" "$AE_OUT"

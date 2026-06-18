@@ -1,7 +1,7 @@
 # DOLMA-Based PoC Demonstration
 
 This directory contains the DOLMA-based simulator and PoC code used for the Section 5 evaluation in our paper.
-> Section 5: Bypassing older-\textmu op-first with taxonomy-recognized transmit \textmu ops under DOLMA (Limitation~III).
+> Section 5: Bypassing older-μop-first with taxonomy-recognized transmit μops under DOLMA (Limitation~III).
 
 
 In the paper, Section 5 evaluates the PoC demonstrations introduced in Section 4. The goal is to show that speculative RS contention remains inducible under the strongest security-oriented configurations of state-of-the-art selective-speculation defenses. This directory corresponds to the DOLMA part of that evaluation.

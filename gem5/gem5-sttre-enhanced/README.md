@@ -1,6 +1,6 @@
-# Speculative Taint Tracking (STT)
+# Enhanced Speculative Taint Tracking (STT)
 
-This directory contains the modified gem5 source code required to simulate the STT selective speculation defense, as referenced in the paper's Section 6 (Defense) and used for attack demonstration in Section .
+This directory contains the modified gem5 source code required to simulate the enhanced STT, as referenced in the paper's Section 6 (Defense).
 
 ## About STT
 
@@ -317,13 +317,6 @@ SCHEME_NAME=conservative_mr \
 OUTPUT_ROOT=$PWD/spec2017_results/conservative_mr \
 WORK_ROOT=$PWD/spec2017_work/conservative_mr \
 bash ./run_spec17suit.sh
-```
-
-To run only a subset of benchmarks, edit the following arrays in `run_spec17suit.sh`:
-
-```bash
-int_rate=(...)
-frate=(...)
 ```
 
 ### 7. Output Directory
