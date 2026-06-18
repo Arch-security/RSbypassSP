@@ -9,7 +9,7 @@ This artifact corresponds to the real-machine validation part of Section 5:
 
 It is also related to the mechanism study in Section 4.1:
 
-> Section 4.1: Exploiting taxonomy-overlooked transmit instructions
+> Section 4.1: Exploiting Transmit Instructions Overlooked by Existing Defense Taxonomies
 
 The goal of this artifact is to validate, on real Intel Raptor Cove P-cores, that operand-dependent μop expansion of REP-prefixed string instructions can create measurable backend pressure and affect the fetch/execution timing of a later target instruction.
 
@@ -19,68 +19,9 @@ In particular, this artifact supports the paper results for:
 2. Figure 14: execution time of the target instruction versus the corresponding issued-μop count, obtained by sweeping `RCX`, for `REP MOVSB` and `REP STOSB` on Intel Core i9-13900K.
 3. The real-machine leakage PoC that recovers secret bits using the timing difference induced by REP-based RS contention.
 
-## 1. Relation to the Paper
+## 1. What Each Directory Does
 
-### 1.1 Section 4.1: Exploiting Taxonomy-Overlooked Transmit Instructions
-
-Section 4.1 discusses how operand-dependent μop expansion falls outside current execution-phase transmitter taxonomies, but can still induce measurable Reservation Station, or RS, contention.
-
-A representative example is the x86 `REP MOVS` family. Instructions such as `REP MOVSB` and `REP MOVSW` copy memory blocks from `RSI` to `RDI` for a number of iterations specified by `RCX`. These instructions are expanded into multiple μops by the Microcode Sequencer.
-
-In the paper, we use nanoBench to characterize the behavior of `REP MOVSB` on Intel Raptor Cove P-cores. We collect performance-counter data, including dispatched/retired μops and misprediction-related metrics. These measurements are used to support the observation that `REP MOVSB` can induce backend pressure through operand-dependent μop expansion, without relying on a conventional mispredicted micro-branch behavior.
-
-The corresponding artifact files are under:
-
-```text
-Real-Machine_Validation/nanoBench/
-```
-
-and the generated CSV files are used by:
-
-```text
-Real-Machine_Validation/rcx_threshold_eval/
-```
-
-### 1.2 Section 5: Contention Thresholds of REP-Prefixed String Instructions on Raptor Cove
-
-Section 5 evaluates whether operand-dependent μop expansion of REP-prefixed string instructions can create measurable contention on real hardware.
-
-This artifact reproduces the data used for:
-
-```text
-Figure 14: Execution time of target instruction versus the corresponding issued-μop count,
-obtained by sweeping RCX, for REP MOVSB and REP STOSB on Intel Core i9-13900K.
-```
-
-The relevant directory is:
-
-```text
-Real-Machine_Validation/rcx_threshold_eval/
-```
-
-This directory sweeps `RCX` values for `REP MOVSB` and `REP STOSB`, measures the execution time of the target instruction, and combines the timing data with nanoBench-issued-μop data to generate the threshold figures.
-
-### 1.3 Real-Machine Leakage PoC
-
-The directory:
-
-```text
-Real-Machine_Validation/REPmsAttack/
-```
-
-contains the real-machine leakage PoC.
-
-This PoC uses the selected `RCX` values and timing thresholds from the threshold sweep to leak secret bits. The main purpose is to show that the REP-induced contention effect is strong enough to distinguish bit values on real hardware.
-
-The PoC can recover a one-byte secret such as:
-
-```text
-'T' = 01010100
-```
-
-## 2. What Each Directory Does
-
-### 2.1 `rcx_threshold_eval/`
+### 1.1 `rcx_threshold_eval/`
 
 This directory is used to reproduce the RCX-threshold evaluation.
 
@@ -101,7 +42,7 @@ This directory is mainly used for reproducing the paper's threshold figure:
 Figure 14
 ```
 
-### 2.2 `REPmsAttack/`
+### 1.2 `REPmsAttack/`
 
 This directory contains the real-machine leakage PoC.
 
@@ -116,13 +57,13 @@ Main files:
 
 This directory is mainly used for showing that the real-machine contention effect can be used to recover secret bits.
 
-### 2.3 `nanoBench/`
+### 1.3 `nanoBench/`
 
 This directory contains a local copy of nanoBench and helper scripts used to collect performance-counter data.
 
 nanoBench is optional for the basic leakage PoC, but it is required if you want to regenerate the issued-μop data used in Table 2 and Figure 14.
 
-## 3. Requirements
+## 2. Requirements
 
 For the threshold sweep and attack:
 
@@ -151,7 +92,7 @@ The included nanoBench helper currently uses:
 nanoBench/configs/cfg_AlderLakeP_all.txt
 ```
 
-## 4. Validation Environment
+## 3. Validation Environment
 
 The checked-in Intel logs and default thresholds were produced on the following validation machine:
 
@@ -169,7 +110,7 @@ Important note:
 
 `RCX` thresholds and timing thresholds are machine dependent. The checked-in logs and defaults are for our validation setup. When running on another CPU, kernel, BIOS setting, frequency policy, or system-load condition, rerun the threshold sweep and choose new thresholds. For artifact evaluation, the sweep is a calibration step; the exact best `RCX` value or timing threshold does not need to match the example tables below.
 
-## 5. Path Setup
+## 4. Path Setup
 
 No manual path setup is needed for the checked-in Makefiles. The two relevant Makefiles:
 
@@ -188,7 +129,7 @@ LIBDIR = $(CURDIR)
 
 Use a checkout path without shell-special characters such as spaces or parentheses. The checked-in Makefiles pass `$(CURDIR)` directly to linker flags, so paths containing characters such as `(` and `)` can break the shell command line.
 
-## 6. Workflow Overview
+## 5. Workflow Overview
 
 The real-machine validation workflow has three parts:
 
@@ -201,7 +142,7 @@ For artifact evaluation, reviewers can either:
 - use the checked-in logs to regenerate the figures; or
 - rerun the measurements on a compatible real Intel machine.
 
-## 7. Step 1: Sweep `RCX` and Select a Threshold
+## 6. Step 1: Sweep `RCX` and Select a Threshold
 
 This step calibrates the local machine. The example values in this README were produced on our validation setup and are not exact pass/fail criteria. On another run, it is acceptable for the best `RCX` value or threshold to differ as long as the qualitative trend remains: larger REP-induced work should produce more high-latency target-instruction samples.
 
@@ -279,11 +220,10 @@ The goal is to choose:
 
 - a low-contention `RCX` value for secret bit `0`;
 - a high-contention `RCX` value for secret bit `1`;
-- a timing threshold that separates the two timing distributions.
 
 Use these calibrated values in Step 2. If the local sweep differs from the checked-in defaults, edit the PoC source constants before running the attack.
 
-## 8. Example Result for the Threshold Sweep
+## 7. Example Result for the Threshold Sweep
 
 For the checked-in Intel MOVSB log:
 
@@ -353,44 +293,8 @@ Using time threshold = 180
 >>> Best RCX value (highest >threshold % rate): 2432
 ```
 
-These results support the paper's Section 5 observation that REP-prefixed string instructions have stable contention thresholds on Intel Raptor Cove P-cores. In artifact evaluation, the important result is the separation between low-`RCX` and high-`RCX` regions, not the exact identity of the single best `RCX` value.
 
-## 9. Using Existing Logs
-
-Intel validation logs:
-
-```text
-rcx_threshold_eval/run_all_output_movsb_exp.log
-rcx_threshold_eval/run_all_output_stosb_exp.log
-```
-
-`analyze.py` accepts the log filename as an optional positional argument.
-
-Example:
-
-```bash
-cd Real-Machine_Validation/rcx_threshold_eval
-python3 analyze.py run_all_output_movsb.log
-```
-
-## 10. Regenerate the RCX-Axis Timing Plot
-
-To regenerate the timing-versus-`RCX` plot from existing logs:
-
-```bash
-cd Real-Machine_Validation/rcx_threshold_eval
-
-python3 draw.py \
-  --log run_all_output_movsb.log \
-  --second-log run_all_output_stosb.log \
-  --out clean_rcx_trend_movsb_stosb.pdf
-```
-
-This plot shows how the target-instruction execution time changes as the `RCX` value of `REP MOVSB` and `REP STOSB` changes.
-
-This plot is related to the Section 5 threshold analysis.
-
-## 11. Regenerate the Issued-μop Plot for Figure 14
+## 8. Regenerate the Issued-μop Plot for Figure 14
 
 To regenerate the paper-style issued-μop plot:
 
@@ -424,13 +328,25 @@ Expected result:
 - `REP MOVSB` and `REP STOSB` should show clear high-contention regions at larger `RCX` values.
 - This supports the claim that operand-dependent μop expansion creates backend pressure that can affect later instruction fetch/execution timing.
 
-The exact commands used for the checked-in paper-style plots are also recorded in:
+## 9. Regenerate the RCX-Axis Timing Plot
 
-```text
-rcx_threshold_eval/plot_generation_commands.md
+To regenerate the timing-versus-`RCX` plot from existing logs:
+
+```bash
+cd Real-Machine_Validation/rcx_threshold_eval
+
+python3 draw.py \
+  --log run_all_output_movsb.log \
+  --second-log run_all_output_stosb.log \
+  --out clean_rcx_trend_movsb_stosb.pdf
 ```
 
-## 12. Step 2: Run the Leakage PoC
+This plot shows how the target-instruction execution time changes as the `RCX` value of `REP MOVSB` and `REP STOSB` changes.
+
+This plot is related to the Section 5 threshold analysis.
+
+
+## 10. Step 2: Run the Leakage PoC
 
 The current checked-in attack parameters are starting points for our validation setup:
 
@@ -482,7 +398,7 @@ The script:
 
 This majority-vote run is the main leakage-PoC check for artifact evaluation.
 
-## 13. Expected Result for the Leakage PoC
+## 11. Expected Result for the Leakage PoC
 
 An individual attack run prints one bit per line, most-significant bit first:
 
@@ -555,9 +471,9 @@ v1REP_stosb
 
 instead.
 
-## 14. Step 3: Generate Attack Plots
+## 12. Step 3: Regenerate Attack Plots for Figure 15-16
 
-Generate an 8-bit leakage plot from a successful single attack run:
+Generate an 8-bit leakage plot from a successful single attack run (Figure 15):
 
 ```bash
 cd Real-Machine_Validation/REPmsAttack
@@ -582,7 +498,7 @@ leak_plot_T.pdf
 
 Its threshold is set in the script, so update it if you changed the attack threshold.
 
-Generate the bit-0/bit-1 timing distribution plot:
+Generate the bit-0/bit-1 timing distribution plot (Figure 16):
 
 ```bash
 ./v1REP_evaluation > evaluation.log
@@ -605,7 +521,7 @@ This plot helps show that bit `0` and bit `1` create distinguishable timing dist
 
 This distribution run can take several minutes because it collects many samples. If you only want to verify the plotting pipeline, you can use the checked-in `evaluation_exp.log` instead of rerunning `v1REP_evaluation`.
 
-## 15. Step 4: Regenerate nanoBench Data
+## 13. Step 4: Regenerate nanoBench Data
 
 nanoBench is only needed for the performance-counter and issued-μop figures. It is not required for running the basic leakage PoC.
 
@@ -653,7 +569,7 @@ draw_uops_issued.py
 
 The nanoBench-generated CSV files are used for the issued-μop axis in Figure 14 and for the Section 4.1 characterization of operand-dependent μop expansion.
 
-## 16. Expected AE Outcomes
+## 14. Expected AE Outcomes
 
 For artifact evaluation, the expected outcomes are:
 
@@ -702,7 +618,7 @@ If the reviewer has root privileges and the correct nanoBench setup, they can re
 
 The expected qualitative result is that `REP MOVSB` and `REP STOSB` show operand-dependent issued-μop behavior as `RCX` changes.
 
-## 17. Practical Notes
+## 15. Practical Notes
 
 - Thresholds are machine dependent. Rerun the threshold sweep if running on a different CPU or system configuration.
 - Frequency scaling, SMT activity, background load, BIOS settings, and core placement can affect timing.
@@ -711,7 +627,7 @@ The expected qualitative result is that `REP MOVSB` and `REP STOSB` show operand
 - Thresholds in the source files are compile-time/source constants. Rebuild after editing them.
 - `run_measuret.sh movsb` overwrites `run_all_output_movsb.log`; `run_measuret.sh stosb` overwrites `run_all_output_stosb.log`.
 
-## 18. Troubleshooting
+## 16. Troubleshooting
 
 ### The leakage result is unstable
 
