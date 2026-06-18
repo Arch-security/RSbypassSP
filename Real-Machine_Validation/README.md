@@ -4,8 +4,7 @@ This directory contains the real-machine validation artifacts for the REP-prefix
 
 This artifact corresponds to the real-machine validation part of Section 5:
 
-> Section 5: PoC Demonstration  
-> Contention thresholds of REP-prefixed string instructions on Raptor Cove
+> Section 5: Contention thresholds of REP-prefixed string instructions on Raptor Cove
 
 It is also related to the mechanism study in Section 4.1:
 
