@@ -1,4 +1,8 @@
-CFLAGS = -std=gnu -O1 -march=native
+ifeq ($(origin CC),default)
+CC := $(shell command -v gcc-11 >/dev/null 2>&1 && echo gcc-11 || echo gcc)
+endif
+
+CFLAGS ?= -std=gnu11 -O1 -march=native
 LIBDIR = $(CURDIR)
 all: measuret
 ifdef RCX

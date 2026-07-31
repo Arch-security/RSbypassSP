@@ -26,9 +26,12 @@ export DEBIAN_FRONTEND=noninteractive
     build-essential \
     gcc-11 \
     g++-11 \
+    gfortran \
+    libopenblas-dev \
     linux-headers-"$(uname -r)" \
     make \
     msr-tools \
+    pkg-config \
     python3 \
     python3-pip \
     python3-venv \
@@ -44,6 +47,8 @@ python -m pip install -r requirements.txt
 echo
 echo "Real-Machine_Validation dependencies installed."
 echo "Recommended native environment: Ubuntu 22.04, GCC 11.x, Python 3.10."
+echo "gfortran, pkg-config, and libopenblas-dev are included for Python"
+echo "packages that may fall back to source builds on newer pip/Python stacks."
 echo "nanoBench counter collection still requires root-only setup from README.md:"
 echo "  load the msr module and build/load the nanoBench kernel module as nb."
 gcc-11 --version | head -n 1 || true

@@ -1,94 +1,119 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-rcx_values=(0 4 8 16 64 72 80 82 128 192 256 320 384 448 512 576 640 704 768 832 896 960 1024 1536 2048 2176 2304 2432 2560 2688 2752 2816 2880 2944 2976 3008 3510 4022)
+set -euo pipefail
 
-UNROLL=500
-WARMUP=10
-CONFIG="configs/cfg_AlderLakeP_all.txt"
-NB="./kernel-nanoBench.sh"
+usage() {
+    cat <<'EOF'
+Usage: ./run_nanorep.sh [movsb|stosb|both]
 
-OUTFILE="nanoBench_rcx_sweep_results_repmovstosb_all.csv"
+Collect nanoBench measurements for REP MOVSB and/or REP STOSB RCX sweeps.
+The default is "both", which writes two distinct CSV files:
 
-echo "RCX,RDTSC,IDQ.MITE_UOPS,IDQ.MS_UOPS,UOPS_ISSUED.ANY,UOPS_RETIRED.SLOTS,INT_MISC.RECOVERY_CYCLES,MACHINE_CLEARS.COUNT,MEM_INST_RETIRED.ALL_LOADS,MEM_INST_RETIRED.ALL_STORES,EXE_ACTIVITY.BOUND_ON_LOADS,EXE_ACTIVITY.BOUND_ON_STORES,UOPS_DISPATCHED.PORT_0,UOPS_DISPATCHED.PORT_1,UOPS_DISPATCHED.PORT_5_11,UOPS_DISPATCHED.PORT_6,UOPS_DISPATCHED.PORT_2_3_10,UOPS_DISPATCHED.PORT_4_9,UOPS_DISPATCHED.PORT_7_8" > "$OUTFILE"
+  nanoBench_rcx_sweep_results_repmovsb_all.csv
+  nanoBench_rcx_sweep_results_repstosb_all.csv
+EOF
+}
 
-for rcx in "${rcx_values[@]}"; do
-    echo "Running for RCX=$rcx..."
+mode="${1:-both}"
 
-    asm="lea rdi, [rsp+0x2000]; mov al, 0x41; mov RCX, $rcx; REP STOSB"
-#  lea rsi, [rsp+0x800]; lea rdi, [rsp+0x2000]; mov RCX, $rcx; REP MOVSB
-#  lea rdi, [rsp+0x2000]; mov al, 0x41; mov RCX, $rcx; REP STOSB
-    sudo taskset -c 0 "$NB" -f -unroll "$UNROLL" -warm_up_count "$WARMUP" -asm "$asm" -config "$CONFIG" > tmp_output.txt
+rcx_values=(
+    0 4 8 16 64 72 80 82 128 192 256 320 384 448 512 576
+    640 704 768 832 896 960 1024 1536 2048 2176 2304 2432
+    2560 2688 2752 2816 2880 2944 2976 3008 3510 4022
+)
 
-    rdtsc=$(grep -F "RDTSC" tmp_output.txt | awk '{print $2}')
-    mite_uops=$(grep -F "IDQ.MITE_UOPS" tmp_output.txt | awk '{print $2}')
-    ms_uops=$(grep -F "IDQ.MS_UOPS" tmp_output.txt | awk '{print $2}')
-    uop_issued=$(grep -F "UOPS_ISSUED.ANY" tmp_output.txt | awk '{print $2}')
-    retire_slots=$(grep -F "UOPS_RETIRED.SLOTS" tmp_output.txt | awk '{print $2}')
-    recovery_cycle=$(grep -F "INT_MISC.RECOVERY_CYCLES" tmp_output.txt | awk '{print $2}')
-    machine_clears=$(grep -F "MACHINE_CLEARS.COUNT" tmp_output.txt | awk '{print $2}')
+UNROLL="${UNROLL:-500}"
+WARMUP="${WARMUP:-10}"
+CONFIG="${CONFIG:-configs/cfg_AlderLakeP_all.txt}"
+NB="${NB:-./kernel-nanoBench.sh}"
+TMP_OUTPUT="$(mktemp)"
 
-    loads=$(grep -F "MEM_INST_RETIRED.ALL_LOADS" tmp_output.txt | awk '{print $2}')
-    stores=$(grep -F "MEM_INST_RETIRED.ALL_STORES" tmp_output.txt | awk '{print $2}')
-    bound_loads=$(grep -F "EXE_ACTIVITY.BOUND_ON_LOADS" tmp_output.txt | awk '{print $2}')
-    bound_stores=$(grep -F "EXE_ACTIVITY.BOUND_ON_STORES" tmp_output.txt | awk '{print $2}')
+trap 'rm -f "$TMP_OUTPUT"' EXIT
 
-    port0=$(grep -F "UOPS_DISPATCHED.PORT_0" tmp_output.txt | awk '{print $2}')
-    port1=$(grep -F "UOPS_DISPATCHED.PORT_1" tmp_output.txt | awk '{print $2}')
-    port511=$(grep -F "UOPS_DISPATCHED.PORT_5_11" tmp_output.txt | awk '{print $2}')
-    port6=$(grep -F "UOPS_DISPATCHED.PORT_6" tmp_output.txt | awk '{print $2}')
-    port2310=$(grep -F "UOPS_DISPATCHED.PORT_2_3_10" tmp_output.txt | awk '{print $2}')
-    port49=$(grep -F "UOPS_DISPATCHED.PORT_4_9" tmp_output.txt | awk '{print $2}')
-    port78=$(grep -F "UOPS_DISPATCHED.PORT_7_8" tmp_output.txt | awk '{print $2}')
+HEADER="RCX,RDTSC,IDQ.MITE_UOPS,IDQ.MS_UOPS,UOPS_ISSUED.ANY,UOPS_RETIRED.SLOTS,INT_MISC.RECOVERY_CYCLES,MACHINE_CLEARS.COUNT,MEM_INST_RETIRED.ALL_LOADS,MEM_INST_RETIRED.ALL_STORES,EXE_ACTIVITY.BOUND_ON_LOADS,EXE_ACTIVITY.BOUND_ON_STORES,UOPS_DISPATCHED.PORT_0,UOPS_DISPATCHED.PORT_1,UOPS_DISPATCHED.PORT_5_11,UOPS_DISPATCHED.PORT_6,UOPS_DISPATCHED.PORT_2_3_10,UOPS_DISPATCHED.PORT_4_9,UOPS_DISPATCHED.PORT_7_8"
 
-    echo "$rcx,$rdtsc,$mite_uops,$ms_uops,$uop_issued,$retire_slots,$recovery_cycle,$machine_clears,$loads,$stores,$bound_loads,$bound_stores,$port0,$port1,$port511,$port6,$port2310,$port49,$port78" >> "$OUTFILE"
-done
+metric_value() {
+    local metric="$1"
+    awk -v metric="$metric" '$1 == metric {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT"
+}
 
-echo "✅ Done. Results saved to $OUTFILE"
+run_sweep() {
+    local rep_mode="$1"
+    local outfile
+    local asm
 
+    case "$rep_mode" in
+        movsb)
+            outfile="nanoBench_rcx_sweep_results_repmovsb_all.csv"
+            ;;
+        stosb)
+            outfile="nanoBench_rcx_sweep_results_repstosb_all.csv"
+            ;;
+        *)
+            echo "error: unknown REP mode '$rep_mode'" >&2
+            exit 1
+            ;;
+    esac
 
+    echo "$HEADER" > "$outfile"
 
+    for rcx in "${rcx_values[@]}"; do
+        echo "Running $rep_mode for RCX=$rcx..."
 
-# #!/bin/bash
+        if [[ "$rep_mode" == "movsb" ]]; then
+            asm="lea rsi, [rsp+0x800]; lea rdi, [rsp+0x2000]; mov RCX, $rcx; REP MOVSB"
+        else
+            asm="lea rdi, [rsp+0x2000]; mov al, 0x41; mov RCX, $rcx; REP STOSB"
+        fi
 
+        sudo taskset -c 0 "$NB" \
+            -f \
+            -unroll "$UNROLL" \
+            -warm_up_count "$WARMUP" \
+            -asm "$asm" \
+            -config "$CONFIG" \
+            > "$TMP_OUTPUT"
 
-# rcx_values=(0 4 8 16 64 72 80 82 128 192 256 320 384 448 512 576 640 704 768 832 896 960 1024 1536 2048 2560 2688 2752 2816 2880 2944 2976 3008)
+        rdtsc=$(metric_value "RDTSC")
+        mite_uops=$(metric_value "IDQ.MITE_UOPS")
+        ms_uops=$(metric_value "IDQ.MS_UOPS")
+        uop_issued=$(metric_value "UOPS_ISSUED.ANY")
+        retire_slots=$(metric_value "UOPS_RETIRED.SLOTS")
+        recovery_cycle=$(metric_value "INT_MISC.RECOVERY_CYCLES")
+        machine_clears=$(metric_value "MACHINE_CLEARS.COUNT")
+        loads=$(metric_value "MEM_INST_RETIRED.ALL_LOADS")
+        stores=$(metric_value "MEM_INST_RETIRED.ALL_STORES")
+        bound_loads=$(metric_value "EXE_ACTIVITY.BOUND_ON_LOADS")
+        bound_stores=$(metric_value "EXE_ACTIVITY.BOUND_ON_STORES")
+        port0=$(metric_value "UOPS_DISPATCHED.PORT_0")
+        port1=$(metric_value "UOPS_DISPATCHED.PORT_1")
+        port511=$(metric_value "UOPS_DISPATCHED.PORT_5_11")
+        port6=$(metric_value "UOPS_DISPATCHED.PORT_6")
+        port2310=$(metric_value "UOPS_DISPATCHED.PORT_2_3_10")
+        port49=$(metric_value "UOPS_DISPATCHED.PORT_4_9")
+        port78=$(metric_value "UOPS_DISPATCHED.PORT_7_8")
 
+        echo "$rcx,$rdtsc,$mite_uops,$ms_uops,$uop_issued,$retire_slots,$recovery_cycle,$machine_clears,$loads,$stores,$bound_loads,$bound_stores,$port0,$port1,$port511,$port6,$port2310,$port49,$port78" >> "$outfile"
+    done
 
-# UNROLL=500
-# WARMUP=10
-# CONFIG="configs/cfg_AlderLakeP_all.txt"
-# NB="./kernel-nanoBench.sh"
+    echo "Done. Results saved to $outfile"
+}
 
-
-# OUTFILE="nanoBench_rcx_sweep_results_repstosb.csv"
-
-# echo "RCX,RDTSC,IDQ.MITE_UOPS,IDQ.MS_UOPS,UOPS_ISSUED,UOPS_RETIRED.SLOTS,INT_MISC.RECOVERY_CYCLES,MACHINE_CLEARS.COUNT" > "$OUTFILE"
-
-# for rcx in "${rcx_values[@]}"; do
-#     echo "Running for RCX=$rcx..."
-
-#     # asm_init="mov RCX, $rcx"
-#     asm="lea rdi, [rsp+0x2000]; mov al, 0x41; mov RCX, $rcx; REP STOSB"
-#     # asm="lea rsi, [rsp+0x800]; lea rdi, [rsp+0x2000]; mov RCX, $rcx;"
-#     # lea rdi, [rsp+0x2000]; mov al, 0x41; mov RCX, $rcx; REP STOSB
-#     # lea rsi, [rsp+0x800]; lea rdi, [rsp+0x2000]; mov RCX, $rcx; REP MOVSB
-#     # lea rsi, [rsp+0x800]; lea rdi, [rsp+0x2000]; mov RCX, $rcx; REP LODSB
-#     # asm="std; lfence; cld;"
-
-#     sudo taskset -c 0  "$NB" -f -unroll "$UNROLL" -warm_up_count "$WARMUP" -asm "$asm" -config "$CONFIG" > tmp_output.txt
-
-
-#     rdtsc=$(grep -i "RDTSC" tmp_output.txt | awk '{print $2}')
-#     cycles=$(grep -i "CORE_CYCLES" tmp_output.txt | awk '{print $2}')
-#     mite_uops=$(grep -i "IDQ.MITE_UOPS" tmp_output.txt | awk '{print $2}')
-#     ms_uops=$(grep -i "IDQ.MS_UOPS" tmp_output.txt | awk '{print $2}')
-#     uop_issued=$(grep -i "UOPS_ISSUED" tmp_output.txt | awk '{print $2}')
-#     retire_slots=$(grep -i "UOPS_RETIRED.SLOTS" tmp_output.txt | awk '{print $2}')
-#     recovery_cycle=$(grep -i "INT_MISC.RECOVERY_CYCLES" tmp_output.txt | awk '{print $2}')
-#     machine_clears=$(grep -i "MACHINE_CLEARS.COUNT" tmp_output.txt | awk '{print $2}')
-
-
-#     echo "$rcx,$rdtsc,$mite_uops,$ms_uops,$uop_issued,$retire_slots,$recovery_cycle,$machine_clears" >> "$OUTFILE"
-# done
-
-# echo "✅ Done. Results saved to $OUTFILE"
+case "$mode" in
+    movsb|stosb)
+        run_sweep "$mode"
+        ;;
+    both)
+        run_sweep movsb
+        run_sweep stosb
+        ;;
+    -h|--help)
+        usage
+        exit 0
+        ;;
+    *)
+        echo "error: unknown mode '$mode'" >&2
+        usage >&2
+        exit 1
+        ;;
+esac

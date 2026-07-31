@@ -8,6 +8,19 @@ through frontend/I-cache timing effects. It includes simulator-based bypass
 PoCs, real-machine validation scripts, a gadget-searching pass, an optional
 real-library PoC, and an enhanced STT defense implementation.
 
+## Hardware and Host Requirements
+
+The gem5 Docker workflows are the primary hardware-independent reproduction
+path. The real-machine validation additionally needs compatible Intel hardware
+because it measures physical timing behavior.
+
+| Artifact part | Required host or hardware |
+| --- | --- |
+| `gem5/stt/` and `gem5/dolma/` | 64-bit x86 Linux host with Docker Engine/CLI and permission to run `docker build` and `docker run`. No special host CPU feature, host compiler, or host Python setup is required because the build dependencies are inside the Docker images. |
+| `gem5/gem5-sttre-enhanced/` | Same Docker host requirements as above. SPEC CPU2017 must be supplied separately by the evaluator. |
+| `Real-Machine_Validation/` | Intel Raptor Cove P-core class machine for direct reproduction. Raptor Cove is used in Raptor Lake client P-cores and Emerald Rapids server CPUs; Emerald Rapids should work for reproduction after rerunning the local threshold calibration. Alder Lake, Meteor Lake, and Arrow Lake can be useful for exploration, but their thresholds and qualitative behavior should be treated as machine-specific. |
+| `gadget_detect/` | Ubuntu-like x86_64 system with GCC 11.x, Python 3, build tools, and enough disk/RAM to build the patched LLVM/Clang tree and target libraries. |
+
 ## Repository Layout
 
 ```text

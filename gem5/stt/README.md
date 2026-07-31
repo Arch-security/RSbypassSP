@@ -57,29 +57,41 @@ MESI_Two_Level
 
 ## 1. Build the Docker Image
 
-From the repository root, run:
+From the artifact root, the recommended command is:
 
 ```bash
+./gem5/install.sh stt
+```
+
+This builds the `stt-ubuntu20-py2` image from `gem5/stt/`.
+
+If building manually, run the Docker build from this `gem5/stt` directory:
+
+```bash
+cd gem5/stt
 docker build -t stt-ubuntu20-py2 .
 ```
 
-If you have already run `./gem5/install.sh` or `./gem5/install.sh stt` from the
-artifact root, this Docker image has already been built and this step can be
-skipped.
+If you have already run `./gem5/install.sh` or `./gem5/install.sh stt`, this
+Docker image has already been built and this step can be skipped.
 
 ## 2. Start a Docker Shell
 
-From the repository root, run:
+From this `gem5/stt` directory, run:
 
 ```bash
 docker run --rm -it -v "$PWD":/workspace/stt stt-ubuntu20-py2
 ```
 
-Inside the container, go to the STT repository root:
+The container starts in the STT repository root:
 
 ```bash
 cd /workspace/stt
 ```
+
+If the artifact root is mounted at `/workspace/stt` instead, the updated
+entrypoint automatically enters `/workspace/stt/gem5/stt` before running the
+requested command.
 
 ## 3. Build STT/gem5 for X86
 

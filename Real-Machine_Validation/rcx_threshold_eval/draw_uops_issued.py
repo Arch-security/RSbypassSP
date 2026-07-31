@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import os
 import argparse
 import csv
@@ -8,11 +10,34 @@ from pathlib import Path
 
 os.environ.setdefault("MPLCONFIGDIR", "/tmp/matplotlib")
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib
+
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+from matplotlib.path import Path as MplPath
 from matplotlib.ticker import StrMethodFormatter
 
-plt.style.use("seaborn-v0_8-whitegrid")
+
+def patch_matplotlib_path_deepcopy() -> None:
+    """Avoid Matplotlib Path deepcopy recursion seen with Python 3.14 builds."""
+
+    def safe_deepcopy(self, memo=None):
+        copied = MplPath(
+            np.array(self.vertices, copy=True),
+            None if self.codes is None else np.array(self.codes, copy=True),
+            _interpolation_steps=getattr(self, "_interpolation_steps", 1),
+            readonly=False,
+        )
+        if memo is not None:
+            memo[id(self)] = copied
+        return copied
+
+    MplPath.__deepcopy__ = safe_deepcopy
+
+
+patch_matplotlib_path_deepcopy()
+
 plt.rcParams.update(
     {
         # Embed TrueType fonts instead of Type 3 fonts in vector outputs.
@@ -23,6 +48,7 @@ plt.rcParams.update(
         "font.weight": "bold",
         "font.size": 12,
         "grid.alpha": 0.3,
+        "axes.grid": True,
         "axes.edgecolor": "black",
         "axes.linewidth": 1.5,
     }
@@ -160,7 +186,7 @@ def plot_trend_panel(
         ax.set_title(title, fontsize=12, color="black", pad=8)
 
     if show_xlabel:
-        ax.set_xlabel("Issued μop Number", fontsize=12, color="black", labelpad=10)
+        ax.set_xlabel("Issued uop Number", fontsize=12, color="black", labelpad=10)
     else:
         ax.set_xlabel("")
     if show_ylabel:
@@ -222,7 +248,7 @@ def plot_stacked_trends(
     )
 
     fig.supylabel("Average Execution Time (Cycles)", x=0.02, fontsize=12, fontweight="bold")
-    fig.supxlabel("Issued μop Number", y=0.03, fontsize=12, fontweight="bold")
+    fig.supxlabel("Issued uop Number", y=0.03, fontsize=12, fontweight="bold")
     plt.subplots_adjust(left=0.10, bottom=0.12, hspace=0.60)
     plt.savefig(output_path, dpi=300, bbox_inches="tight", transparent=False)
     plt.close(fig)

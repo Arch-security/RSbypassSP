@@ -1,40 +1,42 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-# RCX 参数列表
+set -euo pipefail
+
 rcx_values=(0 4 8 16 64 72 80 82 128 200 256 300 320 400 448 500 512)
 
-# nanoBench 相关参数
-UNROLL=500
-WARMUP=10
-CONFIG="configs/cfg_AlderLakeP_all.txt"
-NB="./kernel-nanoBench.sh"
+UNROLL="${UNROLL:-500}"
+WARMUP="${WARMUP:-10}"
+CONFIG="${CONFIG:-configs/cfg_AlderLakeP_all.txt}"
+NB="${NB:-./kernel-nanoBench.sh}"
+OUTFILE="${OUTFILE:-nanoBench_rcx_sweep_results_cld.csv}"
+TMP_OUTPUT="$(mktemp)"
 
-# 输出文件
-OUTFILE="nanoBench_rcx_sweep_results_cld.csv"
-
+trap 'rm -f "$TMP_OUTPUT"' EXIT
 
 echo "RCX,RDTSC,IDQ.MITE_UOPS,IDQ.MS_UOPS,UOPS_ISSUED.ANY,UOPS_RETIRED.SLOTS,INT_MISC.RECOVERY_CYCLES,MACHINE_CLEARS.COUNT" > "$OUTFILE"
 
 for rcx in "${rcx_values[@]}"; do
     echo "Running for RCX=$rcx..."
 
-    asm="std; lfence; cld; "
+    asm="std; lfence; cld;"
 
-    # 执行 nanoBench
-    sudo taskset -c 0  "$NB" -f -unroll "$UNROLL" -warm_up_count "$WARMUP" -asm "$asm" -config "$CONFIG" > tmp_output.txt
+    sudo taskset -c 0 "$NB" \
+        -f \
+        -unroll "$UNROLL" \
+        -warm_up_count "$WARMUP" \
+        -asm "$asm" \
+        -config "$CONFIG" \
+        > "$TMP_OUTPUT"
 
+    rdtsc=$(awk '$1 == "RDTSC" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
+    mite_uops=$(awk '$1 == "IDQ.MITE_UOPS" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
+    ms_uops=$(awk '$1 == "IDQ.MS_UOPS" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
+    uop_issued=$(awk '$1 == "UOPS_ISSUED.ANY" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
+    retire_slots=$(awk '$1 == "UOPS_RETIRED.SLOTS" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
+    recovery_cycle=$(awk '$1 == "INT_MISC.RECOVERY_CYCLES" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
+    machine_clears=$(awk '$1 == "MACHINE_CLEARS.COUNT" {print $2; found=1; exit} END {if (!found) print ""}' "$TMP_OUTPUT")
 
-    rdtsc=$(grep -i "RDTSC" tmp_output.txt | awk '{print $2}')
-    # cycles=$(grep -i "Core cycles" tmp_output.txt | awk '{print $2}')
-    mite_uops=$(grep -i "IDQ.MITE_UOPS" tmp_output.txt | awk '{print $2}')
-    ms_uops=$(grep -i "IDQ.MS_UOPS" tmp_output.txt | awk '{print $2}')
-    uop_issued=$(grep -i "UOPS_ISSUED.ANY" tmp_output.txt | awk '{print $2}')
-    retire_slots=$(grep -i "UOPS_RETIRED.SLOTS" tmp_output.txt | awk '{print $2}')
-    recovery_cycle=$(grep -i "INT_MISC.RECOVERY_CYCLES" tmp_output.txt | awk '{print $2}')
-    machine_clears=$(grep -i "MACHINE_CLEARS.COUNT" tmp_output.txt | awk '{print $2}')
-
-    # 写入结果
     echo "$rcx,$rdtsc,$mite_uops,$ms_uops,$uop_issued,$retire_slots,$recovery_cycle,$machine_clears" >> "$OUTFILE"
 done
 
-echo "✅ Done. Results saved to $OUTFILE"
+echo "Done. Results saved to $OUTFILE"

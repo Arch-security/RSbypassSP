@@ -69,14 +69,19 @@ For the threshold sweep and attack:
 - Linux on x86_64.
 - `bash`.
 - `make`.
-- GCC or another C compiler.
-- Python 3.
+- GCC 11.x recommended. The helper Makefiles use `gcc-11` automatically when
+  the compiler is not explicitly overridden with `make CC=...`.
+- Python 3.10 recommended for the pinned Python package versions.
 
 For plotting:
 
 - `matplotlib`.
 - `numpy`.
 - `seaborn` and `scipy` for `REPmsAttack/draw_evaluation.py`.
+
+On recent Ubuntu/Python stacks, some Python packages may fall back to source
+builds. `install.sh` therefore installs `gfortran`, `pkg-config`, and
+`libopenblas-dev` in addition to the C build tools.
 
 For nanoBench:
 
@@ -108,6 +113,11 @@ nanoBench: msr and nb kernel modules loaded for counter collection
 Important note:
 
 `RCX` thresholds and timing thresholds are machine dependent. The checked-in logs and defaults are for our validation setup. When running on another CPU, kernel, BIOS setting, frequency policy, or system-load condition, rerun the threshold sweep and choose new thresholds. For artifact evaluation, the sweep is a calibration step; the exact best `RCX` value or timing threshold does not need to match the example tables below.
+
+The reference CPU is a Raptor Cove P-core. Raptor Cove appears in Raptor Lake
+client processors and Emerald Rapids server processors. Emerald Rapids should
+therefore be a reasonable reproduction target, but the `RCX` values and timing
+threshold must still be recalibrated locally.
 
 ## 4. Path Setup
 
@@ -220,7 +230,16 @@ The goal is to choose:
 - a low-contention `RCX` value for secret bit `0`;
 - a high-contention `RCX` value for secret bit `1`;
 
-Use these calibrated values in Step 2. If the local sweep differs from the checked-in defaults, edit the PoC source constants before running the attack.
+Use these calibrated values in Step 2. The recommended selection rule is:
+
+- choose a low-contention `RCX` value whose samples are mostly below the timing threshold;
+- choose a high-contention `RCX` value whose samples are mostly above the timing threshold;
+- choose the timing threshold in the valley between the low-contention and high-contention timing distributions.
+
+In our validation setup, `180` cycles separates the checked-in low/high regions
+well. On other hardware, use the `analyze.py` table and the
+`draw_evaluation.py` best-threshold report as calibration aids, then pass the
+new values through the Makefile variables described below.
 
 ## 7. Example Result for the Threshold Sweep
 
@@ -356,22 +375,33 @@ v1REP_stosb.c        4           2880            180 cycles
 v1REP_evaluation.c   0           4022            180 cycles
 ```
 
-If your local sweep suggests different RCX values, update the corresponding source file before running the attack. The sweep in Step 1 is intended for this calibration; the exact values in the table above are not required to be the best values on every run.
+If your local sweep suggests different RCX values, pass them at build time
+instead of editing the source:
 
-Update the inline assembly and classifier threshold together. The relevant source pattern is:
+```bash
+make clean
+make KEY=T LOW_RCX=4 MOVSB_HIGH_RCX=3510 THRESHOLD=180
+```
 
-```c
-mov     $HIGH_RCX, %rdx
-mov     $LOW_RCX,  %rcx
-cmovne  %rdx, %rcx
+For the STOSB variant:
 
+```bash
+make clean
+make KEY=T LOW_RCX=4 STOSB_HIGH_RCX=2880 THRESHOLD=180
+```
+
+For the distribution-only evaluation binary:
+
+```bash
+make clean
+make EVAL_LOW_RCX=0 EVAL_HIGH_RCX=4022 THRESHOLD=180 v1REP_evaluation
 ```
 
 For example:
 
 - choose `LOW_RCX` from a low-contention region where most samples are below the threshold;
 - choose `HIGH_RCX` from a high-contention region where most samples are above the threshold;
-- rebuild after editing, because these values are compile-time/source constants.
+- rebuild after changing these values, because they are compile-time parameters.
 
 Go to the leakage-PoC directory:
 
@@ -382,16 +412,23 @@ cd Real-Machine_Validation/REPmsAttack
 Run the default repeated character leakage script:
 
 ```bash
-bash analyze_chars.sh T
+bash analyze_chars.sh T movsb
 ```
 
-`T` is the target one-byte secret. If omitted, the script defaults to `T`.
+`T` is the target one-byte secret. If omitted, the script defaults to `T` and
+`movsb`.
+
+To use locally calibrated parameters through the script:
+
+```bash
+bash analyze_chars.sh T movsb LOW_RCX=4 MOVSB_HIGH_RCX=3510 THRESHOLD=180
+```
 
 The script:
 
 1. Runs `make clean`.
 2. Builds the attack binaries with `KEY` set to the requested character.
-3. Executes `./v1REP_movsb` for repeated trials.
+3. Executes either `./v1REP_movsb` or `./v1REP_stosb` for repeated trials.
 4. Converts each recovered 8-bit output to a character.
 5. Prints the character frequency table and the majority result.
 
@@ -433,7 +470,7 @@ which corresponds to ASCII:
 A successful repeated run of:
 
 ```bash
-bash analyze_chars.sh T
+bash analyze_chars.sh T movsb
 ```
 
 should report that the most frequent recovered character is:
@@ -447,28 +484,8 @@ This validates that the REP-induced contention threshold is strong enough to lea
 To test the STOSB variant directly:
 
 ```bash
-./v1REP_stosb
+bash analyze_chars.sh T stosb
 ```
-
-Note:
-
-```text
-analyze_chars.sh
-```
-
-currently uses:
-
-```text
-v1REP_movsb
-```
-
-Edit the script if you want the majority-vote loop to use:
-
-```text
-v1REP_stosb
-```
-
-instead.
 
 ## 12. Step 3: Regenerate Attack Plots for Figure 15-16
 
@@ -481,7 +498,7 @@ cd Real-Machine_Validation/REPmsAttack
 python3 draw.py
 ```
 
-If the single run in `leak.log` does not recover the intended byte, rerun `./v1REP_movsb > leak.log` before drawing the plot. The plot is intended to visualize a representative successful trace; it is not the robust pass/fail check. Use `bash analyze_chars.sh T` for the majority-vote leakage result.
+If the single run in `leak.log` does not recover the intended byte, rerun `./v1REP_movsb > leak.log` before drawing the plot. The plot is intended to visualize a representative successful trace; it is not the robust pass/fail check. Use `bash analyze_chars.sh T movsb` for the majority-vote leakage result.
 
 `draw.py` reads:
 
@@ -541,18 +558,23 @@ sudo modprobe msr
 Then run the REP sweep helper:
 
 ```bash
-bash run_nanorep.sh
+bash run_nanorep.sh both
 ```
 
-The checked-in `run_nanorep.sh` currently:
+The checked-in `run_nanorep.sh`:
 
 - pins the benchmark through `sudo taskset -c 0`;
 - uses `./kernel-nanoBench.sh`;
 - uses `configs/cfg_AlderLakeP_all.txt`;
-- has the `REP STOSB` assembly sequence enabled;
-- writes `nanoBench_rcx_sweep_results_repmovstosb_all.csv`.
+- supports `movsb`, `stosb`, or `both` as a command-line mode;
+- writes the MOVSB and STOSB measurements into distinct CSV files.
 
-To collect `REP MOVSB` data, edit the active `asm=` line in `run_nanorep.sh` to the MOVSB sequence and change `OUTFILE` to a MOVSB-specific filename.
+Default output files:
+
+```text
+nanoBench_rcx_sweep_results_repmovsb_all.csv
+nanoBench_rcx_sweep_results_repstosb_all.csv
+```
 
 Then copy the resulting CSV into:
 
@@ -600,7 +622,7 @@ The reviewer should be able to run:
 
 ```bash
 cd Real-Machine_Validation/REPmsAttack
-bash analyze_chars.sh T
+bash analyze_chars.sh T movsb
 ```
 
 and observe that the majority recovered character is:
@@ -623,7 +645,7 @@ The expected qualitative result is that `REP MOVSB` and `REP STOSB` show operand
 - Frequency scaling, SMT activity, background load, BIOS settings, and core placement can affect timing.
 - The checked-in logs are useful for verifying the plotting scripts without rerunning noisy measurements.
 - nanoBench requires root privileges and should not be run on a production system.
-- Thresholds in the source files are compile-time/source constants. Rebuild after editing them.
+- Thresholds are compile-time parameters. Rebuild after changing the Makefile variables.
 - `run_measuret.sh movsb` overwrites `run_all_output_movsb.log`; `run_measuret.sh stosb` overwrites `run_all_output_stosb.log`.
 
 ## 16. Troubleshooting

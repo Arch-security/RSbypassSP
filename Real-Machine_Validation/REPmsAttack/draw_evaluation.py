@@ -1,12 +1,36 @@
+#!/usr/bin/env python3
+
 import argparse
 import os
 
 import numpy as np
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
-import seaborn as sns
+from matplotlib.path import Path as MplPath
 from scipy.stats import gaussian_kde
 
-plt.style.use('seaborn-v0_8-whitegrid')
+
+def patch_matplotlib_path_deepcopy() -> None:
+    """Avoid Matplotlib Path deepcopy recursion seen with Python 3.14 builds."""
+
+    def safe_deepcopy(self, memo=None):
+        copied = MplPath(
+            np.array(self.vertices, copy=True),
+            None if self.codes is None else np.array(self.codes, copy=True),
+            _interpolation_steps=getattr(self, "_interpolation_steps", 1),
+            readonly=False,
+        )
+        if memo is not None:
+            memo[id(self)] = copied
+        return copied
+
+    MplPath.__deepcopy__ = safe_deepcopy
+
+
+patch_matplotlib_path_deepcopy()
+
 plt.rcParams.update({
     # Embed TrueType fonts instead of Type 3 fonts in vector outputs.
     'pdf.fonttype': 42,
@@ -16,6 +40,7 @@ plt.rcParams.update({
     'font.weight': 'bold',
     'font.size': 12,
     'grid.alpha': 0.3,
+    'axes.grid': True,
     'axes.edgecolor': 'black',
     'axes.linewidth': 1.5
 })
@@ -45,8 +70,8 @@ def find_best_threshold(times_0, times_1):
     for t in xs:
         x_left = xs[xs <= t]
         x_right = xs[xs > t]
-        err_1 = np.trapz(kde_1(x_left), x_left)     # Bit=1 判错
-        err_0 = np.trapz(kde_0(x_right), x_right)   # Bit=0 判错
+        err_1 = np.trapz(kde_1(x_left), x_left)
+        err_0 = np.trapz(kde_0(x_right), x_right)
         total_error = err_0 + err_1
         if total_error < best_error:
             best_error = total_error
@@ -82,7 +107,6 @@ def plot_kde_distribution_from_combined(log_file, output='bit_kde_distribution.p
 
     accuracy, precision, recall, f1, TP, FP, TN, FN, tpr_1, tnr_0 = compute_metrics(times_0, times_1, threshold)
 
-    # 打印统计信息
     print(f"[Auto] Best Threshold: {threshold}")
     print(f" Bit = 1 predicted correctly (TP): {TP}")
     print(f" Bit = 1 predicted incorrectly (FN): {FN}")
@@ -96,7 +120,6 @@ def plot_kde_distribution_from_combined(log_file, output='bit_kde_distribution.p
     print(f"  Bit = 1 Accuracy (TPR):  {tpr_1:.4f}")
     print(f"  Bit = 0 Accuracy (TNR):  {tnr_0:.4f}")
 
-    # KDE 绘图
     kde_0 = gaussian_kde(times_0)
     kde_1 = gaussian_kde(times_1)
     xmax = min(max(max(times_0), max(times_1)), 400)
@@ -104,13 +127,12 @@ def plot_kde_distribution_from_combined(log_file, output='bit_kde_distribution.p
 
     fig, ax = plt.subplots(figsize=(12, 3))
 
-    sns.lineplot(x=xs, y=kde_0(xs), label='Bit = 0', color='#1f77b4', linewidth=2.5)
-    sns.lineplot(x=xs, y=kde_1(xs), label='Bit = 1', color='#d62728', linewidth=2.5)
+    ax.plot(xs, kde_0(xs), label='Bit = 0', color='#1f77b4', linewidth=2.5)
+    ax.plot(xs, kde_1(xs), label='Bit = 1', color='#d62728', linewidth=2.5)
 
     xs_left = xs[xs <= threshold]
     xs_right = xs[xs > threshold]
 
-    # 填充错误与正确区域
     ax.fill_between(xs_left, kde_1(xs_left), color='#2ca02c', alpha=0.25)
     ax.fill_between(xs_right, kde_1(xs_right), color='#d62728', alpha=0.25)
     ax.fill_between(xs_left, kde_0(xs_left), color='#1f77b4', alpha=0.25)
@@ -129,7 +151,7 @@ def plot_kde_distribution_from_combined(log_file, output='bit_kde_distribution.p
     ax.legend(fontsize=11, loc='upper right', bbox_to_anchor=(0.95, 1))
     plt.tight_layout()
     plt.savefig(output, dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close(fig)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Plot bit-0/bit-1 timing distributions.")
