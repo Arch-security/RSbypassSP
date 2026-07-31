@@ -1,4 +1,31 @@
+#!/usr/bin/env python3
+
+import numpy as np
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.path import Path as MplPath
+
+
+def patch_matplotlib_path_deepcopy() -> None:
+    """Avoid Matplotlib Path deepcopy recursion seen with Python 3.14 builds."""
+
+    def safe_deepcopy(self, memo=None):
+        copied = MplPath(
+            np.array(self.vertices, copy=True),
+            None if self.codes is None else np.array(self.codes, copy=True),
+            _interpolation_steps=getattr(self, "_interpolation_steps", 1),
+            readonly=False,
+        )
+        if memo is not None:
+            memo[id(self)] = copied
+        return copied
+
+    MplPath.__deepcopy__ = safe_deepcopy
+
+
+patch_matplotlib_path_deepcopy()
 
 plt.style.use('seaborn-v0_8-whitegrid')
 plt.rcParams.update({
@@ -10,6 +37,7 @@ plt.rcParams.update({
     'font.weight': 'bold',
     'font.size': 12,
     'grid.alpha': 0.3,
+    'axes.grid': True,
     'axes.edgecolor': 'black',
     'axes.linewidth': 1.5
 })
@@ -65,7 +93,7 @@ def plot_leak_rounds(observed_bits, times, threshold=180, output_file='leak_plot
 
     plt.tight_layout()
     plt.savefig(output_file, dpi=300, bbox_inches='tight')
-    plt.show()
+    plt.close(fig)
 
 if __name__ == "__main__":
     observed_bits, times = parse_attack_log('leak.log')

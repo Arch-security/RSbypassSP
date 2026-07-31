@@ -1,13 +1,38 @@
+#!/usr/bin/env python3
+
 import os
 
 os.environ.setdefault('MPLCONFIGDIR', '/tmp/matplotlib')
 
 import re
 import numpy as np
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
+from matplotlib.path import Path as MplPath
 from collections import defaultdict
 
-# Configure global style
+
+def patch_matplotlib_path_deepcopy() -> None:
+    """Avoid Matplotlib Path deepcopy recursion seen with Python 3.14 builds."""
+
+    def safe_deepcopy(self, memo=None):
+        copied = MplPath(
+            np.array(self.vertices, copy=True),
+            None if self.codes is None else np.array(self.codes, copy=True),
+            _interpolation_steps=getattr(self, "_interpolation_steps", 1),
+            readonly=False,
+        )
+        if memo is not None:
+            memo[id(self)] = copied
+        return copied
+
+    MplPath.__deepcopy__ = safe_deepcopy
+
+
+patch_matplotlib_path_deepcopy()
+
 plt.style.use('seaborn-v0_8-whitegrid')
 plt.rcParams.update({
     # Embed TrueType fonts instead of Type 3 fonts in vector outputs.
@@ -18,6 +43,7 @@ plt.rcParams.update({
     'font.weight': 'bold',
     'font.size': 12,
     'grid.alpha': 0.3,
+    'axes.grid': True,
     'axes.edgecolor': 'black',
     'axes.linewidth': 1.5
 })
