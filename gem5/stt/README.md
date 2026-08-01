@@ -104,11 +104,13 @@ make x86-64
 This is equivalent to:
 
 ```bash
-scons --config=force build/X86/gem5.opt
+scons --config=force USE_TUNTAP=0 build/X86/gem5.opt
 ```
 
 The `--config=force` flag refreshes SCons configuration checks and avoids stale
 `build/.scons_config` results from a previous host or container environment.
+`USE_TUNTAP=0` disables optional EtherTap/TUN/TAP networking support, which is
+not used by the syscall-emulation STT PoC.
 
 If the custom x86 ISA files are modified, rebuild this target again.
 

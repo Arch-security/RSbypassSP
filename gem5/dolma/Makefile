@@ -1,11 +1,13 @@
-GEM5_SIMULATOR_RISCV 	 = 	./build/RISCV/gem5.opt
-GEM5_SIMULATOR_X86 	 = 	./build/X86/gem5.opt
-DOCKER_ROOT		 =	/workspace/dolma
+ROOT_DIR := $(patsubst %/,%,$(dir $(abspath $(lastword $(MAKEFILE_LIST)))))
+
+GEM5_SIMULATOR_RISCV 	 = 	$(ROOT_DIR)/build/RISCV/gem5.opt
+GEM5_SIMULATOR_X86 	 = 	$(ROOT_DIR)/build/X86/gem5.opt
+DOCKER_ROOT		?=	$(ROOT_DIR)
 
 DEBUGFLAGS 		+= 	--debug-flags=Fetch,Decode,Rename,IEW,IQ,Commit,Exec,Branch,FreeList,O3CPU \
 			 		--debug-file=trace.out \
 
-BOOMFLAGS 		+=   configs/example/se.py \
+BOOMFLAGS 		+=   $(ROOT_DIR)/configs/example/se.py \
 					--num-cpus=1 \
 			 		--caches \
 					--l2cache \
@@ -49,12 +51,12 @@ s1rs_riscv:
 
 # build pipeview file
 pipeview:
-	./util/o3-pipeview.py -c 500 -o pipeview.out --color m5out/trace.out
+	$(ROOT_DIR)/util/o3-pipeview.py -c 500 -o pipeview.out --color m5out/trace.out
 	less -r pipeview.out
 
 # build gem5.opt
 riscv64:
-	python2 $(shell which scons) build/RISCV/gem5.opt
+	cd $(ROOT_DIR) && python2 $(shell which scons) build/RISCV/gem5.opt
 
 x86-64:
-	python2 $(shell which scons) build/X86/gem5.opt
+	cd $(ROOT_DIR) && python2 $(shell which scons) build/X86/gem5.opt

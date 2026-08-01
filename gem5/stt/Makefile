@@ -39,4 +39,4 @@ riscv64:
 	scons build/RISCV/gem5.opt
 
 x86-64:
-	scons --config=force build/X86/gem5.opt
+	scons --config=force USE_TUNTAP=0 build/X86/gem5.opt

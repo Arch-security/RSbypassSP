@@ -83,9 +83,18 @@ build/RISCV/gem5.opt
 
 ## 1. Build the Docker Image
 
-From the repository root, run:
+From the artifact root, the recommended command is:
 
 ```bash
+./gem5/install.sh dolma
+```
+
+This builds the `dolma:ubuntu20.04` image from `gem5/dolma/`.
+
+If building manually, run the Docker build from this `gem5/dolma` directory:
+
+```bash
+cd gem5/dolma
 docker build -t dolma:ubuntu20.04 -f docker/ubuntu20.04/Dockerfile .
 ```
 
@@ -106,7 +115,7 @@ RISC-V compiler.
 
 ## 2. Start a Docker Shell
 
-From the repository root, run:
+From this `gem5/dolma` directory, run:
 
 ```bash
 docker run --rm -it \
@@ -121,12 +130,37 @@ Inside the container, the repository is mounted at:
 /workspace/dolma
 ```
 
+If mounting the artifact root instead, run from the artifact root and use the
+DOLMA subdirectory as the working directory:
+
+```bash
+docker run --rm -it \
+  -v "$PWD":/workspace/artifact \
+  -w /workspace/artifact/gem5/dolma \
+  dolma:ubuntu20.04
+```
+
+The top-level DOLMA Makefile derives paths from its own location, so both mount
+layouts are supported.
+
 ## 3. Build DOLMA/gem5
 
-From inside the container, go to the repository root:
+From inside the container, go to the DOLMA repository root:
 
 ```bash
 cd /workspace/dolma
+```
+
+If the artifact root was mounted at `/workspace/artifact`, use:
+
+```bash
+cd /workspace/artifact/gem5/dolma
+```
+
+Export the DOLMA root for the remaining commands:
+
+```bash
+export DOLMA_ROOT="$PWD"
 ```
 
 Build the x86 simulator:
@@ -230,12 +264,12 @@ To check that the RISC-V toolchain is available, run:
 Go to the PoC directory:
 
 ```bash
-cd /workspace/dolma/RS_Contention_Taxonomy-recognized/variable-time-memory
+cd "$DOLMA_ROOT/RS_Contention_Taxonomy-recognized/variable-time-memory"
 ```
 
-The provided Docker setup uses `/workspace/dolma` as the repository path. The
-Makefile in this directory already sets `LIBDIR` for that path, so no manual
-`LIBDIR` edit is required when using the Docker commands in this README.
+The provided Docker setup supports both mounting `gem5/dolma` directly and
+mounting the artifact root. The top-level Makefile no longer assumes a fixed
+`/workspace/dolma` path.
 
 Then build the PoC:
 
@@ -251,7 +285,7 @@ This PoC leverages variable-latency memory access instructions to induce content
 Go to the x86 predication PoC directory:
 
 ```bash
-cd /workspace/dolma/RS_Contention_Taxonomy-recognized/predicated/predication_X86
+cd "$DOLMA_ROOT/RS_Contention_Taxonomy-recognized/predicated/predication_X86"
 ```
 
 Build the PoCs:
@@ -288,7 +322,7 @@ These PoCs also correspond to the evaluation in:
 Go to the RISC-V predication PoC directory:
 
 ```bash
-cd /workspace/dolma/RS_Contention_Taxonomy-recognized/predicated/predication_RISCV
+cd "$DOLMA_ROOT/RS_Contention_Taxonomy-recognized/predicated/predication_RISCV"
 ```
 
 Build the PoCs:
@@ -324,7 +358,7 @@ It constructs an I-cache side channel in gem5 RISC-V.
 Go back to the repository root:
 
 ```bash
-cd /workspace/dolma
+cd "$DOLMA_ROOT"
 ```
 
 ### 7.1 Run the x86 Variable-Time Memory PoC

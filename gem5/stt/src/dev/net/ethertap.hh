@@ -39,10 +39,20 @@
 #include <string>
 
 #include "base/pollevent.hh"
+#if defined(__has_include)
+#if __has_include("config/use_tuntap.hh")
 #include "config/use_tuntap.hh"
+#endif
+#else
+#include "config/use_tuntap.hh"
+#endif
 #include "dev/net/etherint.hh"
 #include "dev/net/etherobject.hh"
 #include "dev/net/etherpkt.hh"
+
+#ifndef USE_TUNTAP
+#define USE_TUNTAP 0
+#endif
 
 #if USE_TUNTAP
 #include "params/EtherTap.hh"

@@ -58,6 +58,8 @@ cd "$AE_WORK"
 git clone https://github.com/llvm/llvm-project.git
 cd llvm-project
 git checkout llvmorg-21.1.5
+cp "$ARTIFACT_ROOT/gadget_detect/LLVM_FIX/X86MIRanalyze.cpp" \
+   llvm/lib/Target/X86/X86MIRanalyze.cpp
 git apply "$ARTIFACT_ROOT/gadget_detect/LLVM_FIX/X86MIRanalyze_pass.patch"
 
 mkdir -p build
