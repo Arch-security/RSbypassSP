@@ -33,6 +33,7 @@ export DEBIAN_FRONTEND=noninteractive
     g++-11 \
     gettext \
     git \
+    libgpg-error-dev \
     libtinfo-dev \
     libtool \
     m4 \

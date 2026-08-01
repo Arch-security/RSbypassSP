@@ -42,6 +42,17 @@ LLVM:   llvmorg-21.1.5
 
 ## Experiment Directories
 
+Install the host build dependencies first:
+
+```bash
+cd ../
+./install.sh
+cd LLVM_FIX
+```
+
+This installs `libgpg-error-dev`, which provides the libgpg-error development
+files required by the Libgcrypt configure step.
+
 Run the commands in this README from `gadget_detect/LLVM_FIX/`. Set the artifact root, work directory, and log directory:
 
 ```bash
@@ -118,6 +129,9 @@ git clone https://github.com/gpg/libgcrypt.git
 cd libgcrypt
 git checkout libgcrypt-1.11.0
 bash autogen.sh
+
+# Requires libgpg-error-dev. Run ../install.sh if configure reports that
+# libgpg-error is missing.
 
 ./configure --disable-doc \
   CC="$CLANG" \
