@@ -114,10 +114,10 @@ Important note:
 
 `RCX` thresholds and timing thresholds are machine dependent. The checked-in logs and defaults are for our validation setup. When running on another CPU, kernel, BIOS setting, frequency policy, or system-load condition, rerun the threshold sweep and choose new thresholds. For artifact evaluation, the sweep is a calibration step; the exact best `RCX` value or timing threshold does not need to match the example tables below.
 
-The reference CPU is a Raptor Cove P-core. Raptor Cove appears in Raptor Lake
-client processors and Emerald Rapids server processors. Emerald Rapids should
-therefore be a reasonable reproduction target, but the `RCX` values and timing
-threshold must still be recalibrated locally.
+The reference Intel CPU is a Raptor Cove P-core. Raptor Cove appears in Raptor
+Lake client processors. AMD Zen 1 and Zen 3 machines are used for AMD
+validation. The `RCX` values and timing threshold must still be recalibrated
+locally on each machine.
 
 ## 4. Path Setup
 
