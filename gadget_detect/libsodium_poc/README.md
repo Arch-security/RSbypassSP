@@ -37,23 +37,62 @@ mkdir -p "$AE_OUT"
 
 ## 4. Build libsodium and the PoC
 
-### 4.1 Build libsodium
+### 4.1 Build or Use the Bundled libsodium
 
-The PoC relies on a statically compiled libsodium library.
-
-For convenience, we provide the compiled libsodium library in this directory.
-
-For more details about building libsodium with the LLVM-based gadget-searching setup, refer to:
+The PoC uses the bundled libsodium source tree under:
 
 ```text
-../LLVM_FIX/README.md
+libsodium/
 ```
+
+For convenience, the artifact also includes a prebuilt shared object:
+
+```text
+libsodium/src/libsodium/.libs/libsodium.so.26.2.0
+```
+
+This prebuilt library retains the local symbols needed by the address-resolution
+script, including `fe25519_mul` and `ristretto255_is_canonical`. Do not replace
+it with the separate libsodium checkout built for `../LLVM_FIX/`; that build may
+not retain the same local symbols.
+
+To check that the required symbols are present:
+
+```bash
+nm -a libsodium/src/libsodium/.libs/libsodium.so.26.2.0 | \
+  awk '$3=="fe25519_mul" || $3=="ristretto255_is_canonical" {print}'
+```
+
+Expected output includes:
+
+```text
+0000000000016020 t fe25519_mul
+00000000000353b0 t fe25519_mul
+0000000000026950 t ristretto255_is_canonical
+```
+
+If the prebuilt shared object is incompatible with the local system, rebuild the
+bundled libsodium tree locally:
+
+```bash
+cd libsodium
+make distclean || true
+bash autogen.sh
+./configure CC=clang CFLAGS="-O2 -g"
+make -j$(nproc)
+cd ..
+```
+
+Then rerun the `nm` command above. The exact symbol offsets may differ after a
+local rebuild; this is expected, and Step 7 resolves the offsets for the local
+library.
 
 ### 4.2 Build the PoC
 
 Run:
 
 ```bash
+make clean
 make
 ```
 
@@ -62,6 +101,10 @@ This builds the PoC binary:
 ```text
 ./mul
 ```
+
+The Makefile links `mul` with a relative RUNPATH pointing to
+`libsodium/src/libsodium/.libs`, so the binary uses the bundled libsodium copy
+from the current checkout.
 
 ## 5. Microarchitectural State Preparation
 

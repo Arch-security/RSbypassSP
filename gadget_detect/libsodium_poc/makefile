@@ -4,7 +4,7 @@ CFLAGS  := -O2 -g -Wall -Wextra
 SODIUM_DIR := $(CURDIR)/libsodium/src/libsodium
 INC_DIR    := $(SODIUM_DIR)/include
 LIB_DIR    := $(SODIUM_DIR)/.libs
-RPATH      := $(LIB_DIR)
+RPATH      := '$$ORIGIN/libsodium/src/libsodium/.libs'
 
 TARGET := mul
 SRC    := mul.c
