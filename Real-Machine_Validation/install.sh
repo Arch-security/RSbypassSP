@@ -24,17 +24,22 @@ export DEBIAN_FRONTEND=noninteractive
 "${SUDO[@]}" apt-get update
 "${SUDO[@]}" apt-get install -y \
     build-essential \
+    clang \
     gcc-11 \
     g++-11 \
     gfortran \
+    kmod \
     libopenblas-dev \
     linux-headers-"$(uname -r)" \
+    linux-tools-common \
     make \
     msr-tools \
     pkg-config \
     python3 \
+    python3-dev \
     python3-pip \
     python3-venv \
+    sudo \
     util-linux
 
 cd "$ROOT_DIR"
@@ -49,6 +54,8 @@ echo "Real-Machine_Validation dependencies installed."
 echo "Recommended native environment: Ubuntu 22.04, GCC 11.x, Python 3.10."
 echo "gfortran, pkg-config, and libopenblas-dev are included for Python"
 echo "packages that may fall back to source builds on newer pip/Python stacks."
+echo "clang, kmod, msr-tools, util-linux, and matching Linux headers are included"
+echo "for optional helper builds and nanoBench setup."
 echo "nanoBench counter collection still requires root-only setup from README.md:"
 echo "  load the msr module and build/load the nanoBench kernel module as nb."
 gcc-11 --version | head -n 1 || true

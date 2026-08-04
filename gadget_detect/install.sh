@@ -28,12 +28,17 @@ export DEBIAN_FRONTEND=noninteractive
     autopoint \
     binutils-gold \
     build-essential \
+    ca-certificates \
+    clang \
     cmake \
+    curl \
     gcc-11 \
     g++-11 \
+    gfortran \
     gettext \
     git \
     libgpg-error-dev \
+    libopenblas-dev \
     libtinfo-dev \
     libtool \
     m4 \
@@ -41,6 +46,7 @@ export DEBIAN_FRONTEND=noninteractive
     perl \
     pkg-config \
     python3 \
+    python3-dev \
     python3-pip \
     python3-venv \
     zlib1g-dev
@@ -55,6 +61,7 @@ python -m pip install -r requirements.txt
 echo
 echo "gadget_detect dependencies installed."
 echo "Recommended native environment: Ubuntu 22.04, GCC 11.x, Python 3.10."
+echo "clang is installed for the libsodium PoC and local rebuild workflows."
 echo "The LLVM pass workflow builds Clang llvmorg-21.1.5 from source; see LLVM_FIX/README.md."
 gcc-11 --version | head -n 1 || true
 python --version

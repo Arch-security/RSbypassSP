@@ -35,12 +35,15 @@ usenix2026_ae/
 |   |-- rcx_threshold_eval/     # REP MOVSB/STOSB threshold sweep
 |   |-- REPmsAttack/            # Real-machine bit-recovery PoC
 |   |-- nanoBench/              # Optional counter collection
+|   |-- Dockerfile
 |   |-- install.sh
 |   `-- requirements.txt
 |
 |-- gadget_detect/
+|   |-- README.md
 |   |-- LLVM_FIX/               # LLVM X86 backend gadget-searching pass
 |   |-- libsodium_poc/          # Optional libsodium timing PoC
+|   |-- Dockerfile
 |   |-- install.sh
 |   `-- requirements.txt
 |
@@ -70,6 +73,21 @@ The main folders provide setup helpers:
 ./Real-Machine_Validation/install.sh
 ./gadget_detect/install.sh
 ```
+
+Optional Docker dependency wrappers are also provided for the non-gem5
+workflows:
+
+```bash
+cd "$ARTIFACT_ROOT/gadget_detect"
+docker build -t rsbypass-gadget .
+
+cd "$ARTIFACT_ROOT/Real-Machine_Validation"
+docker build -t rsbypass-real-machine .
+```
+
+The real-machine Docker image standardizes user-space dependencies only.
+nanoBench still requires a privileged container with host kernel/module access;
+see `Real-Machine_Validation/README.md`.
 
 The `requirements.txt` files record the Python package versions used in our
 tested environments. The real-machine and gadget-detection helpers assume an

@@ -35,6 +35,9 @@ export AE_OUT="$PWD/ae_out"
 mkdir -p "$AE_OUT"
 ```
 
+Install the native dependencies with `../install.sh`, or use the Docker
+environment described in `../README.md`.
+
 ## 4. Build libsodium and the PoC
 
 ### 4.1 Build or Use the Bundled libsodium
@@ -77,7 +80,6 @@ bundled libsodium tree locally:
 ```bash
 cd libsodium
 make distclean || true
-bash autogen.sh
 ./configure CC=clang CFLAGS="-O2 -g"
 make -j$(nproc)
 cd ..

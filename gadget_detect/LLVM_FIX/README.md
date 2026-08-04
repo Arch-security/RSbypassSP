@@ -53,6 +53,8 @@ cd LLVM_FIX
 This installs `libgpg-error-dev`, which provides the libgpg-error development
 files required by the Libgcrypt configure step.
 
+Alternatively, use the Docker environment described in `../README.md`.
+
 Run the commands in this README from `gadget_detect/LLVM_FIX/`. Set the artifact root, work directory, and log directory:
 
 ```bash

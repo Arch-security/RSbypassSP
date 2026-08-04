@@ -71,6 +71,7 @@ For the threshold sweep and attack:
 - `make`.
 - GCC 11.x recommended. The helper Makefiles use `gcc-11` automatically when
   the compiler is not explicitly overridden with `make CC=...`.
+- `util-linux`, for `taskset` and `setarch`.
 - Python 3.10 recommended for the pinned Python package versions.
 
 For plotting:
@@ -82,10 +83,13 @@ For plotting:
 On recent Ubuntu/Python stacks, some Python packages may fall back to source
 builds. `install.sh` therefore installs `gfortran`, `pkg-config`, and
 `libopenblas-dev` in addition to the C build tools.
+The helper and Docker image also include `clang` to keep optional helper builds
+available in the same environment.
 
 For nanoBench:
 
 - Root privileges.
+- `kmod`, `msr-tools`, and matching `linux-headers-$(uname -r)`.
 - `msr` kernel module loaded.
 - nanoBench kernel module loaded as `nb`.
 - A CPU-specific nanoBench configuration file.
@@ -94,6 +98,64 @@ The included nanoBench helper currently uses:
 
 ```text
 nanoBench/configs/cfg_AlderLakeP_all.txt
+```
+
+### 2.1 Optional Docker Setup
+
+The Docker image provides a consistent user-space dependency environment. It
+does not replace the real machine requirement: timing-sensitive runs and
+nanoBench counter collection still execute on the host CPU.
+
+Build the image from this directory:
+
+```bash
+docker build -t rsbypass-real-machine .
+```
+
+For threshold sweeps, attack binaries, and plotting without nanoBench kernel
+module collection, run from the artifact root:
+
+```bash
+docker run --rm -it \
+  -v "$PWD":/workspace/artifact \
+  -w /workspace/artifact/Real-Machine_Validation \
+  rsbypass-real-machine
+```
+
+For nanoBench kernel-module collection, run the container with host kernel
+access:
+
+```bash
+docker run --rm -it \
+  --privileged \
+  --pid=host \
+  -v "$PWD":/workspace/artifact \
+  -v /lib/modules:/lib/modules:ro \
+  -v /usr/src:/usr/src:ro \
+  -w /workspace/artifact/Real-Machine_Validation \
+  rsbypass-real-machine
+```
+
+The host must provide matching kernel headers at:
+
+```text
+/lib/modules/$(uname -r)/build
+```
+
+Inside the container, set:
+
+```bash
+export ARTIFACT_ROOT=/workspace/artifact
+```
+
+Then follow the commands below. For nanoBench, build and load the kernel module
+from inside the privileged container:
+
+```bash
+cd nanoBench
+make kernel
+sudo insmod kernel/nb.ko
+sudo modprobe msr
 ```
 
 ## 3. Validation Environment
