@@ -12,14 +12,17 @@ real-library PoC, and an enhanced STT defense implementation.
 
 The gem5 Docker workflows are the primary hardware-independent reproduction
 path. The real-machine validation additionally needs compatible hardware
-because it measures physical timing behavior.
+because it measures physical timing behavior. Approximate time is listed as
+human-hours plus computer-hours.
 
-| Artifact part | Required host or hardware |
-| --- | --- |
-| `gem5/stt/` and `gem5/dolma/` | 64-bit x86 Linux host with Docker Engine/CLI and permission to run `docker build` and `docker run`. No special host CPU feature, host compiler, or host Python setup is required because the build dependencies are inside the Docker images. |
-| `gem5/gem5-sttre-enhanced/` | Same Docker host requirements as above. SPEC CPU2017 must be supplied separately by the evaluator. |
-| `Real-Machine_Validation/` | Intel Raptor Cove P-core class machine for direct reproduction. Raptor Cove is used in Raptor Lake client P-cores. AMD Zen 1 and Zen 3 machines are used for AMD validation. |
-| `gadget_detect/` | Ubuntu-like x86_64 system with GCC 11.x, Python 3, build tools, and enough disk/RAM to build the patched LLVM/Clang tree and target libraries. |
+| Experiment | CPU / hardware | Tested systems or families | Privileges | External software | Approx. time |
+| --- | --- | --- | --- | --- | --- |
+| E1: STT bypass | 64-bit x86 Linux host with Docker; at least 32 GB RAM recommended for gem5 builds. No special host CPU feature is required. | Simulator workflow; not host-CPU-family dependent. | Permission to run `docker build` and `docker run`. | Docker Engine/CLI; the STT image provides its legacy Ubuntu/Python/SCons environment. | 0.1 h + 0.2 h |
+| E2: DOLMA bypass | 64-bit x86 Linux host with Docker; at least 32 GB RAM and tens of GB of disk recommended. No special host CPU feature is required. | Simulator workflow; not host-CPU-family dependent. | Permission to run `docker build` and `docker run`. | Docker Engine/CLI; the DOLMA image provides its Ubuntu 20.04 environment and RISC-V toolchain. | 0.2 h + 0.3 h |
+| E3: real-machine REP validation | Intel Raptor Cove P-core class machine for direct reproduction. Raptor Cove is used in Raptor Lake client P-cores. | Tested Intel systems include Core i9-13900K and Core i7-14650HX. AMD Zen 1 and Zen 3 machines are supporting validation platforms. | Normal user for threshold/attack runs; root for optional nanoBench counter collection. | GCC 11.x, Python 3.10, plotting packages, `gfortran`, `pkg-config`, OpenBLAS headers; `msr`, kernel headers, and nanoBench for counters. | 0.3 h + 0.5 h |
+| E4: LLVM gadget search | Ubuntu-like x86_64 system; enough CPU, memory, and disk to build LLVM/Clang and target libraries. | Build workflow; not host-CPU-family dependent. | Normal user. | GCC 11.x, Clang/LLVM build dependencies, CMake, GNU Make, Python packages, and source checkouts of the target libraries. | 0.3 h + about 0.7 h |
+| E5: enhanced STT overhead | 64-bit x86 Linux host with Docker; at least 32 GB RAM and large disk/output space recommended for gem5 and SPEC runs. | Simulator workflow; not host-CPU-family dependent. | Permission to run `docker build` and `docker run`. | Docker Engine/CLI plus evaluator-provided SPEC CPU2017. | 0.6 h + 50.3 h |
+| E6: libsodium timing PoC | Real x86_64 machine; quiet system and stable core pinning recommended because timing is machine-sensitive. | Validated on Intel Xeon Gold 6248R; exact timing values may vary. | Normal user; ASLR-disabled shell with `setarch` for address resolution. | `clang`, local libsodium build inputs, Python plotting packages. | 0.1 h + 0.1 h |
 
 ## Repository Layout
 

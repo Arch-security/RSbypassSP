@@ -160,7 +160,8 @@ sudo modprobe msr
 
 ## 3. Validation Environment
 
-The checked-in Intel logs and default thresholds were produced on the following validation machine:
+The checked-in Intel logs and default thresholds were produced on the following
+reference validation machine:
 
 ```text
 OS:        Ubuntu 22.04.5 LTS (Jammy)
@@ -172,14 +173,19 @@ Python:    Python 3.10.12
 nanoBench: msr and nb kernel modules loaded for counter collection
 ```
 
+We also tested the real-machine PoC on an Intel Core i7-14650HX Raptor Cove
+P-core system.
+
 Important note:
 
 `RCX` thresholds and timing thresholds are machine dependent. The checked-in logs and defaults are for our validation setup. When running on another CPU, kernel, BIOS setting, frequency policy, or system-load condition, rerun the threshold sweep and choose new thresholds. For artifact evaluation, the sweep is a calibration step; the exact best `RCX` value or timing threshold does not need to match the example tables below.
 
-The reference Intel CPU is a Raptor Cove P-core. Raptor Cove appears in Raptor
-Lake client processors. AMD Zen 1 and Zen 3 machines are used for AMD
-validation. The `RCX` values and timing threshold must still be recalibrated
-locally on each machine.
+The direct reproduction target is an Intel Raptor Cove P-core. Raptor Cove
+appears in Raptor Lake client processors. AMD Zen 1 and Zen 3 machines are used
+as supporting validation platforms, not as the direct-reproduction target. Other
+processors should be treated as untested for direct reproduction unless they
+are calibrated locally. The `RCX` values and timing threshold must still be
+recalibrated locally on each machine.
 
 ## 4. Path Setup
 
