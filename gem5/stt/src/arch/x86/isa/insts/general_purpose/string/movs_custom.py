@@ -1,6 +1,8 @@
 
 microcode = '''
 def macroop MOVS_HIGH {
+    # Artifact path for the high-contention case: this models the large-RCX
+    # REP MOVSB setting used to create stronger reservation-station pressure.
  # Handle RCX == 0 (no operation)
     # and t0, rcx, rcx, flags=(EZF,), dataSize=asz
     # br label("end"), flags=(CEZF,)
@@ -498,6 +500,8 @@ end:
 };
 
 def macroop MOVS_ZERO{
+    # Artifact path for the low-contention case: this models the small-RCX
+    # REP MOVSB setting used as the lower-pressure baseline.
 
     and t0, rcx, rcx, flags=(EZF,), dataSize=asz
     ruflag t0, 10
