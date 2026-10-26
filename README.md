@@ -1,12 +1,16 @@
 # USENIX Security 2026 Artifact
 
-This repository contains the artifacts for our USENIX Security 2026 paper.
+This repository contains the artifacts for our USENIX Security 2026 paper "Exploiting Hidden Resource Contention in Selective Speculation Defenses".
 
 The artifact demonstrates how secret-dependent Reservation Station (RS)
 pressure can be induced under selective-speculation defenses and observed
 through frontend/I-cache timing effects. It includes simulator-based bypass
 PoCs, real-machine validation scripts, a gadget-searching pass, an optional
 real-library PoC, and an enhanced STT defense implementation.
+
+![USENIX Artifact Available](badges/usenixbadges-available.png)
+![USENIX Artifact Functional](badges/usenixbadges-functional.png)
+![USENIX Artifact Reproduced](badges/usenixbadges-reproduced.png)
 
 ## Hardware and Host Requirements
 
