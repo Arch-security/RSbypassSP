@@ -8,9 +8,7 @@ through frontend/I-cache timing effects. It includes simulator-based bypass
 PoCs, real-machine validation scripts, a gadget-searching pass, an optional
 real-library PoC, and an enhanced STT defense implementation.
 
-![USENIX Artifact Available](badges/usenixbadges-available.png)
-![USENIX Artifact Functional](badges/usenixbadges-functional.png)
-![USENIX Artifact Reproduced](badges/usenixbadges-reproduced.png)
+<p><img src="badges/usenixbadges-available.png" alt="USENIX Artifact Available" width="150"> <img src="badges/usenixbadges-functional.png" alt="USENIX Artifact Functional" width="150"> <img src="badges/usenixbadges-reproduced.png" alt="USENIX Artifact Reproduced" width="150"></p>
 
 ## Hardware and Host Requirements
 
